@@ -287,6 +287,39 @@ $yform->setValueField('mailer', [
 | `###REX_DATE###` | Datum (TT.MM.JJJJ) |
 | `###REX_DATETIME###` | Datum und Uhrzeit |
 
+### Bedingte Blöcke
+
+Mit bedingten Blöcken können Sie Inhalte nur anzeigen, wenn ein Feld ausgefüllt wurde. Das Template bleibt dabei im Browser lesbar (HTML-Kommentare).
+
+**Syntax:**
+```html
+<!--@IF:feldname-->
+  Dieser Text erscheint nur, wenn "feldname" ausgefüllt ist.
+  Telefon: ###telefon###
+<!--@ENDIF:feldname-->
+```
+
+**Beispiel E-Mail-Template:**
+```html
+<h1>Neue Kontaktanfrage</h1>
+
+<p><strong>Name:</strong> ###name###</p>
+<p><strong>E-Mail:</strong> ###email###</p>
+
+<!--@IF:telefon-->
+<p><strong>Telefon:</strong> ###telefon###</p>
+<!--@ENDIF:telefon-->
+
+<!--@IF:firma-->
+<p><strong>Firma:</strong> ###firma###</p>
+<!--@ENDIF:firma-->
+
+<h2>Nachricht</h2>
+<p>###message###</p>
+```
+
+> **Tipp:** Da die Bedingungen als HTML-Kommentare formatiert sind, können Sie das Template einfach im Browser öffnen und das Layout prüfen - die Kommentare werden nicht angezeigt.
+
 ---
 
 ## 📊 Fehler-Log

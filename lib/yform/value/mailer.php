@@ -386,16 +386,21 @@ class rex_yform_value_mailer extends rex_yform_value_abstract
     }
 
     /**
-     * Ersetzt Platzhalter.
+     * Ersetzt Platzhalter und bedingte Blöcke.
      *
      * Unterstützte Formate:
-     * - ###feldname### (empfohlen, kein Konflikt mit Sprog)
-     * - REX_YFORM_DATA[field="feldname"]
+     * - ###feldname### - Einfacher Platzhalter
+     * - <!--@IF:feldname-->...<!--@ENDIF:feldname--> - Bedingter Block (nur wenn Feld gefüllt)
+     * - REX_YFORM_DATA[field="feldname"] - YForm-Kompatibilität
      *
      * @param array<string, mixed> $values
      */
     private function replacePlaceholders(string $text, array $values): string
     {
+        // Erst bedingte Blöcke verarbeiten
+        $text = $this->processConditionalBlocks($text, $values);
+
+        // Dann einfache Platzhalter ersetzen
         foreach ($values as $key => $value) {
             if (is_array($value)) {
                 $value = implode(', ', $value);
@@ -411,6 +416,40 @@ class rex_yform_value_mailer extends rex_yform_value_abstract
             );
         }
         return $text;
+    }
+
+    /**
+     * Verarbeitet bedingte Blöcke.
+     *
+     * Format: <!--@IF:feldname-->Inhalt wenn gefüllt<!--@ENDIF:feldname-->
+     * Der Block wird komplett entfernt wenn das Feld leer ist.
+     * So kann man das Template auch im Browser betrachten (HTML-Kommentare).
+     *
+     * @param array<string, mixed> $values
+     */
+    private function processConditionalBlocks(string $text, array $values): string
+    {
+        // Pattern: <!--@IF:feldname-->...<!--@ENDIF:feldname-->
+        $pattern = '/<!--@IF:([a-zA-Z0-9_]+)-->(.*?)<!--@ENDIF:\1-->/s';
+
+        return (string) preg_replace_callback($pattern, function ($matches) use ($values) {
+            $fieldName = $matches[1];
+            $content = $matches[2];
+
+            // Prüfen ob Feld existiert und nicht leer ist
+            $value = $values[$fieldName] ?? '';
+            if (is_array($value)) {
+                $value = implode('', $value);
+            }
+
+            // Wenn leer, kompletten Block entfernen
+            if ('' === trim((string) $value)) {
+                return '';
+            }
+
+            // Wenn gefüllt, Inhalt behalten (ohne die Kommentar-Tags)
+            return $content;
+        }, $text);
     }
 
     /**
