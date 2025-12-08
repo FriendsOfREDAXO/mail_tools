@@ -370,8 +370,21 @@ Ein Cronjob analysiert regelmäßig das PHPMailer-Log und sendet Berichte über 
    - **Empfänger**: Kommagetrennte E-Mail-Adressen
    - **Nur bei Fehlern**: Bericht nur senden wenn neue Fehler vorhanden
    - **EML anhängen**: Archivierte E-Mails als Anhang mitsenden (optional)
+   - **Filter: Betreff**: Nur E-Mails melden, deren Betreff diesen Text enthält
+   - **Filter: Empfänger**: Nur E-Mails melden, deren Empfänger diesen Text enthält
 5. Zeitplan festlegen (z.B. täglich)
 6. Cronjob aktivieren
+
+### Filter-Beispiele
+
+| Filter | Wert | Beschreibung |
+|--------|------|--------------|
+| Betreff | `Newsletter` | Nur Newsletter-Fehler melden |
+| Betreff | `Bestellung` | Nur Bestellbestätigungs-Fehler |
+| Empfänger | `@firma.de` | Nur interne E-Mails überwachen |
+| Empfänger | `@gmail.com` | Nur Gmail-Empfänger überwachen |
+
+> **Tipp:** Sie können mehrere Cronjobs mit unterschiedlichen Filtern anlegen, um verschiedene Teams über relevante Fehler zu informieren.
 
 ### Report-Vorschau
 
