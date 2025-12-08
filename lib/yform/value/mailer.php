@@ -388,6 +388,10 @@ class rex_yform_value_mailer extends rex_yform_value_abstract
     /**
      * Ersetzt Platzhalter.
      *
+     * Unterstützte Formate:
+     * - ###feldname### (empfohlen, kein Konflikt mit Sprog)
+     * - REX_YFORM_DATA[field="feldname"]
+     *
      * @param array<string, mixed> $values
      */
     private function replacePlaceholders(string $text, array $values): string
@@ -396,9 +400,12 @@ class rex_yform_value_mailer extends rex_yform_value_abstract
             if (is_array($value)) {
                 $value = implode(', ', $value);
             }
-            // Beide Formate unterstützen
+            // Alle unterstützten Formate ersetzen
             $text = str_replace(
-                ['{{' . $key . '}}', 'REX_YFORM_DATA[field="' . $key . '"]'],
+                [
+                    '###' . $key . '###',
+                    'REX_YFORM_DATA[field="' . $key . '"]',
+                ],
                 (string) $value,
                 $text
             );

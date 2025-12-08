@@ -116,7 +116,7 @@ Das `mailer` Value ermöglicht E-Mail-Versand beim Speichern eines Datensatzes -
 3. Konfigurieren:
    - **Template**: YForm E-Mail-Template (optional)
    - **Empfänger**: E-Mail oder Feldname (z.B. `email`)
-   - **Betreff**: Mit `{{feldname}}` Platzhaltern
+   - **Betreff**: Mit `###feldname###` Platzhaltern
    - **Nachricht**: HTML/Text (wenn kein Template)
    - **Anhänge**: Upload-Feldnamen kommagetrennt
    - **Versand-Modus**: Wann soll gesendet werden?
@@ -124,7 +124,7 @@ Das `mailer` Value ermöglicht E-Mail-Versand beim Speichern eines Datensatzes -
 ### Pipe-Format
 
 ```
-mailer|mail_sent|E-Mail-Versand|kontakt_template|email||{{name}} hat sich angemeldet|email|||dokument,foto|0
+mailer|mail_sent|E-Mail-Versand|kontakt_template|email||###name### hat sich angemeldet|email|||dokument,foto|0
 ```
 
 ### Parameter
@@ -247,8 +247,8 @@ $yform->setValueField('mailer', [
     'Benachrichtigung',
     '',                                           // kein Template
     'admin@example.com',                          // feste E-Mail
-    'Neue Anfrage von {{name}}',                  // Betreff mit Platzhalter
-    '<h1>Neue Anfrage</h1><p>{{message}}</p>',   // HTML-Body
+    'Neue Anfrage von ###name###',                // Betreff mit Platzhalter
+    '<h1>Neue Anfrage</h1><p>###message###</p>', // HTML-Body
     'email',                                      // reply_to aus Formularfeld
     '',                                           // cc
     'archiv@example.com',                         // bcc
@@ -281,11 +281,11 @@ $yform->setValueField('mailer', [
 
 | Platzhalter | Beschreibung |
 |-------------|--------------|
-| `{{feldname}}` | Wert eines Tabellenfelds |
-| `{{id}}` | ID des Datensatzes |
-| `{{REX_SERVER}}` | Servername |
-| `{{REX_DATE}}` | Datum (TT.MM.JJJJ) |
-| `{{REX_DATETIME}}` | Datum und Uhrzeit |
+| `###feldname###` | Wert eines Tabellenfelds |
+| `###id###` | ID des Datensatzes |
+| `###REX_SERVER###` | Servername |
+| `###REX_DATE###` | Datum (TT.MM.JJJJ) |
+| `###REX_DATETIME###` | Datum und Uhrzeit |
 
 ---
 
