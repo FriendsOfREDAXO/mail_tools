@@ -162,6 +162,7 @@ class SmtpDiagnostics
             'host' => $phpmailer->getConfig('host', ''),
             'port' => (int) $phpmailer->getConfig('port', 25),
             'security' => $phpmailer->getConfig('smtpsecure', ''),
+            'security_mode' => (bool) $phpmailer->getConfig('security_mode', true), // Auto-TLS
             'auth' => (bool) $phpmailer->getConfig('smtp_auth', false),
             'username' => $phpmailer->getConfig('username', ''),
             'password' => $phpmailer->getConfig('password', ''),
@@ -286,6 +287,7 @@ class SmtpDiagnostics
             // Port
             $port = $this->config['port'];
             $security = $this->config['security'];
+            $autoTls = $this->config['security_mode'];
             $portStatus = 'ok';
             $portHint = '';
 
@@ -295,7 +297,8 @@ class SmtpDiagnostics
             } elseif ($port === 465 && $security !== 'ssl') {
                 $portStatus = 'warning';
                 $portHint = rex_i18n::msg('mail_tools_diag_port_465_needs_ssl');
-            } elseif ($port === 587 && $security !== 'tls') {
+            } elseif ($port === 587 && $security !== 'tls' && !$autoTls) {
+                // Port 587 braucht TLS, aber Auto-TLS ist auch OK
                 $portStatus = 'warning';
                 $portHint = rex_i18n::msg('mail_tools_diag_port_587_needs_tls');
             }
@@ -308,20 +311,38 @@ class SmtpDiagnostics
             ];
 
             // Verschlüsselung
-            $securityLabel = match ($security) {
-                'ssl' => 'SSL/TLS (implicit)',
-                'tls' => 'STARTTLS (explicit)',
-                default => rex_i18n::msg('mail_tools_diag_no_encryption'),
-            };
+            $security = $this->config['security'];
+            $autoTls = $this->config['security_mode'];
+            
+            // Label und Status basierend auf Konfiguration
+            if ($security === 'ssl') {
+                $securityLabel = 'SSL/TLS (implicit)';
+                $securityStatus = 'ok';
+                $securityHint = '';
+            } elseif ($security === 'tls') {
+                $securityLabel = 'STARTTLS (explicit)';
+                $securityStatus = 'ok';
+                $securityHint = '';
+            } elseif ($autoTls) {
+                // Auto-TLS aktiviert - das ist OK, PHPMailer versucht automatisch STARTTLS
+                $securityLabel = rex_i18n::msg('mail_tools_diag_auto_tls');
+                $securityStatus = 'ok';
+                $securityHint = rex_i18n::msg('mail_tools_diag_auto_tls_hint');
+            } else {
+                // Weder explizite Verschlüsselung noch Auto-TLS
+                $securityLabel = rex_i18n::msg('mail_tools_diag_no_encryption');
+                $securityStatus = 'warning';
+                $securityHint = rex_i18n::msg('mail_tools_diag_no_encryption_hint');
+            }
             
             $check['details'][] = [
                 'label' => rex_i18n::msg('mail_tools_diag_encryption'),
                 'value' => $securityLabel,
-                'status' => empty($security) ? 'warning' : 'ok',
-                'hint' => empty($security) ? rex_i18n::msg('mail_tools_diag_no_encryption_hint') : '',
+                'status' => $securityStatus,
+                'hint' => $securityHint,
             ];
 
-            $this->isSecure = !empty($security);
+            $this->isSecure = !empty($security) || $autoTls;
 
             // Authentifizierung
             if ($this->config['auth']) {
@@ -1001,13 +1022,18 @@ class SmtpDiagnostics
             ];
         }
 
-        // Keine Verschlüsselung
+        // Auto-TLS oder keine Verschlüsselung - explizite TLS empfehlen
         if ($this->config['mailer'] === 'smtp' && empty($this->config['security'])) {
+            // Prüfen ob Auto-TLS aktiv ist
+            $isAutoTls = ($this->config['security_mode'] ?? '') === '1';
+            
             $recommendations[] = [
                 'type' => 'security',
                 'key' => 'enable_encryption',
                 'title' => rex_i18n::msg('mail_tools_diag_rec_enable_encryption'),
-                'description' => rex_i18n::msg('mail_tools_diag_rec_encryption_important'),
+                'description' => $isAutoTls 
+                    ? rex_i18n::msg('mail_tools_diag_rec_autotls_warning')
+                    : rex_i18n::msg('mail_tools_diag_rec_encryption_important'),
                 'action' => 'enable_tls',
             ];
         }
@@ -1334,6 +1360,7 @@ class SmtpDiagnostics
             return [
                 'explanation' => rex_i18n::msg('mail_tools_diag_error_ssl_explain'),
                 'help' => [
+                    rex_i18n::msg('mail_tools_diag_help_try_tls'),
                     rex_i18n::msg('mail_tools_diag_help_check_encryption'),
                     rex_i18n::msg('mail_tools_diag_help_port_encryption'),
                 ],
