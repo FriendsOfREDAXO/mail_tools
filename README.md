@@ -1,0 +1,228 @@
+# Mail Tools für REDAXO
+
+Ein REDAXO AddOn mit nützlichen E-Mail-Werkzeugen für Überwachung und Validierung.
+
+## Features
+
+- **Domain-Validator**: Prüft E-Mail-Domains via DNS/MX-Lookup
+- **Fehler-Log**: Übersicht aller fehlgeschlagenen E-Mails aus dem PHPMailer-Log
+- **Cronjob Fehlerbericht**: Automatische Benachrichtigung bei E-Mail-Fehlern
+- **Cronjob Retry**: Automatisches erneutes Senden bei temporären Fehlern
+- **YForm-Validator**: E-Mail-Domain-Prüfung für Formulare
+
+---
+
+## 🔍 E-Mail Domain-Validator
+
+Prüft, ob eine E-Mail-Adresse zu einer existierenden Domain gehört, die E-Mails empfangen kann.
+
+### PHP-Verwendung
+
+```php
+use FriendsOfRedaxo\MailTools\DomainValidator;
+
+// Vollständige Validierung
+$result = DomainValidator::validate('user@example.com');
+
+if ($result['valid']) {
+    echo 'E-Mail-Domain ist gültig';
+} else {
+    echo 'Fehler: ' . $result['message'];
+}
+
+// Ergebnis-Array:
+// [
+//     'valid' => true/false,
+//     'syntax' => true/false,
+//     'domain' => true/false,
+//     'mx' => true/false,
+//     'message' => 'Statusmeldung'
+// ]
+
+// Schnelle Prüfung (nur true/false)
+if (DomainValidator::isValid('user@example.com')) {
+    // Domain existiert
+}
+
+// Strenge Prüfung - Domain muss MX-Record haben
+if (DomainValidator::isValid('user@example.com', true)) {
+    // Domain hat Mailserver
+}
+
+// Einzelne Prüfungen
+$domain = DomainValidator::extractDomain('user@example.com'); // 'example.com'
+$hasMx = DomainValidator::hasMxRecord('example.com');
+$hasA = DomainValidator::isDomainValid('example.com');
+```
+
+### YForm Validator
+
+In YForm-Formularen kann der `email_domain` Validator verwendet werden:
+
+```
+validate|email_domain|feldname|Fehlermeldung|0
+```
+
+**Parameter:**
+- `feldname`: Name des E-Mail-Feldes
+- `Fehlermeldung`: Wird angezeigt wenn Domain ungültig
+- `0/1`: Strenge MX-Prüfung (1 = Domain muss MX-Record haben)
+
+**Beispiel im Pipe-Format:**
+```
+text|email|E-Mail|
+validate|email|email|Bitte gültige E-Mail eingeben
+validate|email_domain|email|Diese E-Mail-Domain existiert nicht|0
+```
+
+---
+
+## 📊 Fehler-Log
+
+Unter **E-Mail Tools → Fehler-Log** werden alle fehlgeschlagenen E-Mails angezeigt:
+
+- **Statistiken**: Fehler heute, diese Woche, diesen Monat, gesamt
+- **Zeitfilter**: Letzte Stunde bis alle Einträge
+- **Details**: Zeitpunkt, Empfänger, Betreff, Fehlermeldung
+
+### PHP-Verwendung
+
+```php
+use FriendsOfRedaxo\MailTools\LogParser;
+
+// Alle fehlgeschlagenen E-Mails
+$failed = LogParser::getFailedEmails();
+
+// Noch nicht gemeldete Fehler
+$unreported = LogParser::getUnreportedFailedEmails();
+
+// Statistiken
+$stats = LogParser::getStatistics();
+// [
+//     'today' => 2,
+//     'week' => 5,
+//     'month' => 12,
+//     'total' => 47,
+//     'top_domains' => ['example.com' => 3, ...]
+// ]
+
+// Als gemeldet markieren
+LogParser::markAsReported($unreported);
+```
+
+---
+
+## 📧 Cronjob für Fehlerberichte
+
+Ein Cronjob analysiert regelmäßig das PHPMailer-Log und sendet Berichte über fehlgeschlagene E-Mails per E-Mail.
+
+### Einrichtung
+
+1. Gehen Sie zu **System → Cronjob**
+2. Neuen Cronjob erstellen
+3. Typ: **E-Mail Fehlerbericht**
+4. Konfigurieren Sie:
+   - **Empfänger**: Kommagetrennte E-Mail-Adressen
+   - **Nur bei Fehlern**: Bericht nur senden wenn neue Fehler vorhanden
+   - **EML anhängen**: Archivierte E-Mails als Anhang mitsenden (optional)
+5. Zeitplan festlegen (z.B. täglich)
+6. Cronjob aktivieren
+
+### Report-Vorschau
+
+Unter **E-Mail Tools → Test** können Sie einen Test-Report an sich selbst senden, um das Aussehen zu prüfen.
+
+---
+
+## 🔄 Cronjob für Retry
+
+Ein zweiter Cronjob versendet E-Mails mit temporären Fehlern automatisch erneut.
+
+### Temporäre Fehler (Retry sinnvoll)
+
+- Connection Timeout / Refused
+- SMTP 4xx Codes (421, 450, 451, 452)
+- Greylisting
+- Rate Limiting
+- Server überlastet
+
+### Permanente Fehler (kein Retry)
+
+- User unknown / Mailbox not found
+- Domain not found
+- SMTP 5xx Codes (550, 551, 552, 553, 554)
+- Blacklisted / Blocked
+
+### Einrichtung
+
+1. Gehen Sie zu **System → Cronjob**
+2. Neuen Cronjob erstellen
+3. Typ: **E-Mail Retry**
+4. Zeitplan festlegen (z.B. stündlich)
+5. Cronjob aktivieren
+
+### Retry-Logik
+
+- Maximal 3 Versuche pro E-Mail
+- Wartezeiten: 1. Retry nach 1h, 2. nach 6h, 3. nach 24h
+- Benötigt archivierte E-Mails (PHPMailer Archiv-Funktion)
+
+### PHP-Verwendung
+
+```php
+use FriendsOfRedaxo\MailTools\RetryHandler;
+
+// Prüfen ob Fehler temporär ist
+if (RetryHandler::isTemporaryError($errorMessage)) {
+    // Retry sinnvoll
+}
+
+// Alle retry-fähigen E-Mails
+$retryable = RetryHandler::getRetryableEmails();
+
+// Einzelne E-Mail erneut senden
+$result = RetryHandler::retry($hash);
+
+// Alle fälligen Retries ausführen
+$stats = RetryHandler::processRetries();
+// ['total' => 5, 'success' => 3, 'failed' => 2]
+```
+
+---
+
+## 🧪 Testseite
+
+Unter **E-Mail Tools → Test** können Sie:
+
+1. **Domain-Validator testen**: E-Mail eingeben und Domain-Existenz prüfen
+2. **Test-Report senden**: Beispiel-Fehlerbericht an eine E-Mail-Adresse senden
+
+---
+
+## Installation
+
+1. Im REDAXO Installer nach `mail_tools` suchen
+2. AddOn installieren und aktivieren
+
+## Voraussetzungen
+
+| Paket | Version |
+|-------|---------|
+| REDAXO | >= 5.17 |
+| PHP | >= 8.1 |
+| PHPMailer | >= 2.10 |
+
+### Empfohlen
+
+- **Cronjob AddOn** - für automatische Fehlerberichte
+- **YForm AddOn** - für den E-Mail-Domain-Validator in Formularen
+
+---
+
+## Lizenz
+
+MIT License
+
+## Credits
+
+[Friends Of REDAXO](https://friendsofredaxo.github.io/)

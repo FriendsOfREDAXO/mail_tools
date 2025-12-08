@@ -1,0 +1,141 @@
+# mail_tools - Deutsch
+
+# Allgemein
+mail_tools_title = E-Mail Tools
+title = E-Mail Tools
+navigation_log = Fehler-Log
+navigation_test = Test
+navigation_help = Hilfe
+
+# PHPMailer Check
+phpmailer_not_available = Das PHPMailer AddOn ist nicht verfügbar. Bitte installieren und aktivieren Sie es zuerst.
+
+# Config
+config_title = E-Mail Fehlerberichte
+config_recipients = Empfänger
+config_recipients_notice = Kommagetrennte Liste von E-Mail-Adressen für Fehlerberichte
+config_only_errors = Nur bei Fehlern senden
+config_only_errors_label = Bericht nur senden, wenn neue Fehler gefunden wurden
+
+# Cronjob
+cronjob_name = E-Mail Fehlerbericht
+cronjob_retry_name = E-Mail Retry
+cronjob_retry_info_label = Information
+cronjob_retry_info_notice = Dieser Cronjob versendet E-Mails mit temporären Fehlern (z.B. Timeout, Greylisting) automatisch erneut. Max. 3 Versuche pro E-Mail.
+cronjob_hint_title = Cronjob einrichten
+cronjob_hint_text = Um automatische Fehlerberichte zu erhalten, richten Sie einen Cronjob ein, der regelmäßig ausgeführt wird.
+cronjob_status = Cronjob-Status
+cronjob_active = Aktiv
+cronjob_inactive = Inaktiv
+cronjob_edit = Cronjob bearbeiten
+cronjob_create = Cronjob erstellen
+cronjob_addon_missing = Das Cronjob AddOn ist nicht installiert.
+config_attach_eml_label = Archivierte E-Mails (.eml) als Anhang mitsenden (max. 10)
+
+# Log-Seite
+log_title = Fehlgeschlagene E-Mails
+entries = Einträge
+no_errors_found = Keine fehlgeschlagenen E-Mails in diesem Zeitraum gefunden.
+filter_label = Zeitraum:
+filter_1h = Letzte Stunde
+filter_6h = Letzte 6 Stunden
+filter_24h = Letzte 24 Stunden
+filter_7d = Letzte 7 Tage
+filter_30d = Letzte 30 Tage
+filter_all = Alle
+
+# Tabelle
+col_time = Zeitpunkt
+col_recipient = Empfänger
+col_subject = Betreff
+col_error = Fehlermeldung
+
+# Statistiken
+stats_today = Heute
+stats_week = Diese Woche
+stats_month = Diesen Monat
+stats_total = Gesamt
+
+# YForm Validator
+yform_validate_email_domain_description = Prüft, ob die E-Mail-Domain existiert (DNS/MX-Lookup)
+yform_email_domain_error = Die E-Mail-Domain existiert nicht oder kann keine E-Mails empfangen.
+
+# Hilfe
+help_title = Dokumentation
+help_domain_validator_title = Domain-Validator
+help_domain_validator_desc = Der Domain-Validator prüft, ob eine E-Mail-Adresse zu einer existierenden Domain gehört, die E-Mails empfangen kann.
+help_usage_code = PHP-Verwendung
+help_yform_title = YForm Validator
+help_yform_desc = In YForm-Formularen können Sie den Validator "email_domain" verwenden:
+help_log_parser_title = Log-Parser
+help_log_parser_desc = Der Log-Parser analysiert das PHPMailer-Log und extrahiert fehlgeschlagene E-Mail-Versuche.
+help_cronjob_title = Cronjob einrichten
+help_cronjob_desc = So richten Sie den automatischen Fehlerbericht ein:
+help_cronjob_step1 = Gehen Sie zu "AddOns → Cronjob"
+help_cronjob_step2 = Erstellen Sie einen neuen Cronjob vom Typ "E-Mail Fehlerbericht"
+help_cronjob_step3 = Konfigurieren Sie den Zeitplan (z.B. täglich)
+help_cronjob_step4 = Aktivieren Sie den Cronjob
+
+# Testseite
+test_title = Domain-Validator testen
+test_email_label = E-Mail-Adresse
+test_require_mx = Strenge MX-Prüfung (Domain muss MX-Record haben)
+test_button = Domain prüfen
+test_result_title = Ergebnis
+test_result_valid = Domain ist gültig
+test_result_invalid = Domain ist ungültig
+test_detail_email = E-Mail-Adresse
+test_detail_domain = Domain
+test_detail_syntax = Syntax gültig
+test_detail_mx = MX-Record vorhanden
+test_detail_a = A-Record vorhanden
+test_yes = Ja
+test_no = Nein
+test_examples_title = Beispiel-Adressen
+test_examples_desc = Hier sind einige Beispiele zum Testen:
+test_examples_valid = Gültige Domains
+test_examples_invalid = Ungültige Domains
+
+# Test-Report
+test_report_title = Fehler-Report testen
+test_report_desc = Senden Sie einen Test-Report mit Beispieldaten an eine E-Mail-Adresse, um das Aussehen zu überprüfen.
+test_report_email_label = E-Mail-Adresse
+test_report_button = Test-Report senden
+test_report_sent = Test-Report wurde erfolgreich an {0} gesendet!
+test_report_send_error = Fehler beim Senden des Reports. Bitte prüfen Sie die PHPMailer-Konfiguration.
+test_report_invalid_email = Bitte geben Sie eine gültige E-Mail-Adresse ein.
+
+# Retry-Test
+test_retry_title = Retry-Warteschlange
+test_retry_desc = Hier sehen Sie alle E-Mails, die für einen erneuten Sendeversuch vorgemerkt sind.
+test_retry_pending = Ausstehende Retries
+test_retry_empty = Keine E-Mails in der Retry-Warteschlange.
+test_retry_button = Jetzt verarbeiten
+test_retry_processed = {0} E-Mail(s) wurden verarbeitet.
+test_retry_remove = Entfernen
+test_retry_removed = E-Mail wurde aus der Warteschlange entfernt.
+test_retry_archive_path = Archiv-Pfad
+test_retry_archive_missing = Verzeichnis existiert nicht
+test_retry_type = Fehlertyp
+test_retry_action = Aktion
+test_retry_temporary = Temporär
+test_retry_permanent = Permanent
+test_retry_available = verfügbar
+test_retry_max_reached = Max. erreicht
+retry_id = ID
+retry_recipient = Empfänger
+retry_subject = Betreff
+retry_attempts = Versuche
+retry_next = Nächster Versuch
+retry_status = Status
+retry_action = Aktion
+retry_status_pending = Ausstehend
+retry_status_processing = In Bearbeitung
+retry_status_success = Erfolgreich
+retry_status_failed = Fehlgeschlagen
+
+# YForm Validator
+yform_validate_email_domain_name = E-Mail-Feld
+yform_validate_email_domain_message = Fehlermeldung
+yform_validate_email_domain_require_mx = MX-Record erforderlich
+yform_validate_email_domain_description = Prüft ob die E-Mail-Domain existiert und einen Mailserver hat.

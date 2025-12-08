@@ -1,0 +1,141 @@
+# mail_tools - English
+
+# General
+mail_tools_title = E-Mail Tools
+title = E-Mail Tools
+navigation_log = Error Log
+navigation_test = Test
+navigation_help = Help
+
+# PHPMailer Check
+phpmailer_not_available = The PHPMailer AddOn is not available. Please install and activate it first.
+
+# Config
+config_title = E-Mail Error Reports
+config_recipients = Recipients
+config_recipients_notice = Comma-separated list of email addresses for error reports
+config_only_errors = Send only on errors
+config_only_errors_label = Only send report if new errors were found
+
+# Cronjob
+cronjob_name = E-Mail Error Report
+cronjob_retry_name = E-Mail Retry
+cronjob_retry_info_label = Information
+cronjob_retry_info_notice = This cronjob automatically resends emails with temporary errors (e.g. timeout, greylisting). Max. 3 attempts per email.
+cronjob_hint_title = Set up Cronjob
+cronjob_hint_text = To receive automatic error reports, set up a cronjob that runs regularly.
+cronjob_status = Cronjob Status
+cronjob_active = Active
+cronjob_inactive = Inactive
+cronjob_edit = Edit Cronjob
+cronjob_create = Create Cronjob
+cronjob_addon_missing = The Cronjob AddOn is not installed.
+config_attach_eml_label = Attach archived emails (.eml) to report (max. 10)
+
+# Log page
+log_title = Failed Emails
+entries = entries
+no_errors_found = No failed emails found in this period.
+filter_label = Period:
+filter_1h = Last hour
+filter_6h = Last 6 hours
+filter_24h = Last 24 hours
+filter_7d = Last 7 days
+filter_30d = Last 30 days
+filter_all = All
+
+# Table
+col_time = Time
+col_recipient = Recipient
+col_subject = Subject
+col_error = Error Message
+
+# Statistics
+stats_today = Today
+stats_week = This Week
+stats_month = This Month
+stats_total = Total
+
+# YForm Validator
+yform_validate_email_domain_description = Checks if the email domain exists (DNS/MX lookup)
+yform_email_domain_error = The email domain does not exist or cannot receive emails.
+
+# Help
+help_title = Documentation
+help_domain_validator_title = Domain Validator
+help_domain_validator_desc = The domain validator checks if an email address belongs to an existing domain that can receive emails.
+help_usage_code = PHP Usage
+help_yform_title = YForm Validator
+help_yform_desc = In YForm forms you can use the "email_domain" validator:
+help_log_parser_title = Log Parser
+help_log_parser_desc = The log parser analyzes the PHPMailer log and extracts failed email attempts.
+help_cronjob_title = Set up Cronjob
+help_cronjob_desc = How to set up the automatic error report:
+help_cronjob_step1 = Go to "AddOns → Cronjob"
+help_cronjob_step2 = Create a new cronjob of type "E-Mail Error Report"
+help_cronjob_step3 = Configure the schedule (e.g. daily)
+help_cronjob_step4 = Activate the cronjob
+
+# Test page
+test_title = Test Domain Validator
+test_email_label = Email Address
+test_require_mx = Strict MX check (domain must have MX record)
+test_button = Check Domain
+test_result_title = Result
+test_result_valid = Domain is valid
+test_result_invalid = Domain is invalid
+test_detail_email = Email Address
+test_detail_domain = Domain
+test_detail_syntax = Syntax valid
+test_detail_mx = MX record exists
+test_detail_a = A record exists
+test_yes = Yes
+test_no = No
+test_examples_title = Example Addresses
+test_examples_desc = Here are some examples to test:
+test_examples_valid = Valid Domains
+test_examples_invalid = Invalid Domains
+
+# Test Report
+test_report_title = Test Error Report
+test_report_desc = Send a test report with sample data to an email address to preview the layout.
+test_report_email_label = Email Address
+test_report_button = Send Test Report
+test_report_sent = Test report was successfully sent to {0}!
+test_report_send_error = Error sending the report. Please check the PHPMailer configuration.
+test_report_invalid_email = Please enter a valid email address.
+
+# Retry Test
+test_retry_title = Retry Queue
+test_retry_desc = Here you can see all emails that are scheduled for retry.
+test_retry_pending = Pending Retries
+test_retry_empty = No emails in the retry queue.
+test_retry_button = Process Now
+test_retry_processed = {0} email(s) have been processed.
+test_retry_remove = Remove
+test_retry_removed = Email has been removed from the queue.
+test_retry_archive_path = Archive Path
+test_retry_archive_missing = Directory does not exist
+test_retry_type = Error Type
+test_retry_action = Action
+test_retry_temporary = Temporary
+test_retry_permanent = Permanent
+test_retry_available = available
+test_retry_max_reached = Max. reached
+retry_id = ID
+retry_recipient = Recipient
+retry_subject = Subject
+retry_attempts = Attempts
+retry_next = Next Attempt
+retry_status = Status
+retry_action = Action
+retry_status_pending = Pending
+retry_status_processing = Processing
+retry_status_success = Success
+retry_status_failed = Failed
+
+# YForm Validator
+yform_validate_email_domain_name = Email field
+yform_validate_email_domain_message = Error message
+yform_validate_email_domain_require_mx = Require MX record
+yform_validate_email_domain_description = Checks if the email domain exists and has a mail server.

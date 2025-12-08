@@ -1,0 +1,35 @@
+package: mail_tools
+version: '1.0.0'
+author: Friends Of REDAXO
+supportpage: https://github.com/FriendsOfREDAXO/mail_tools
+
+# Seiten als Unterseite von PHPMailer
+pages:
+    phpmailer/mail_tools:
+        title: 'translate:title'
+        perm: mail_tools[]
+        icon: rex-icon fa-envelope-open
+
+        subpages:
+            log:
+                title: 'translate:navigation_log'
+                icon: rex-icon fa-exclamation-triangle
+                isDefault: true
+            test:
+                title: 'translate:navigation_test'
+                icon: rex-icon fa-flask
+            help:
+                title: 'translate:navigation_help'
+                icon: rex-icon fa-question-circle
+                subPath: README.md
+
+requires:
+    php: '>=8.1'
+    redaxo: ^5.17
+    packages:
+        phpmailer: '>=2.10'
+
+recommends:
+    packages:
+        cronjob: '*'
+        yform: '>=4.0'
