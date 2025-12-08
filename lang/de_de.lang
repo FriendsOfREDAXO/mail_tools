@@ -139,3 +139,26 @@ yform_validate_email_domain_name = E-Mail-Feld
 yform_validate_email_domain_message = Fehlermeldung
 yform_validate_email_domain_require_mx = MX-Record erforderlich
 yform_validate_email_domain_description = Prüft ob die E-Mail-Domain existiert und einen Mailserver hat.
+
+# YForm Mailer Value
+mail_tools_mailer_template = E-Mail-Template
+mail_tools_mailer_template_notice = Name des YForm E-Mail-Templates (optional, wenn leer wird Subject/Body verwendet)
+mail_tools_mailer_to = Empfänger
+mail_tools_mailer_to_notice = E-Mail-Adresse oder Feldname (z.B. "email" für dynamischen Empfänger)
+mail_tools_mailer_subject = Betreff
+mail_tools_mailer_subject_notice = Mit Platzhaltern: {{feldname}}, {{REX_DATE}}, {{REX_SERVER}}
+mail_tools_mailer_body = Nachricht
+mail_tools_mailer_body_notice = HTML oder Text mit Platzhaltern (nur wenn kein Template verwendet wird)
+mail_tools_mailer_reply_to = Reply-To
+mail_tools_mailer_cc = CC
+mail_tools_mailer_bcc = BCC
+mail_tools_mailer_attachments = Anhänge (Upload-Felder)
+mail_tools_mailer_attachments_notice = Feldnamen kommagetrennt, z.B.: dokument,foto
+mail_tools_mailer_send_mode = Versand-Modus
+mail_tools_mailer_send_always = Immer senden
+mail_tools_mailer_send_new_only = Nur bei Neuanlage
+mail_tools_mailer_send_never = Nie (manuell)
+mail_tools_mailer_will_send = E-Mail wird beim Speichern gesendet
+mail_tools_mailer_description = Sendet E-Mail beim Speichern mit voller PHPMailer-Unterstützung
+mail_tools_mailer_smtp_config = SMTP-Konfiguration
+mail_tools_mailer_smtp_config_notice = Optional: Eigene SMTP-Zugangsdaten als JSON. Beispiel: {"host":"smtp.example.com","port":587,"secure":"tls","auth":true,"username":"user","password":"secret"}

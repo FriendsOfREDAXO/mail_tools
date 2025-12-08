@@ -9,6 +9,7 @@ Ein REDAXO AddOn mit nützlichen E-Mail-Werkzeugen für Überwachung und Validie
 - **Cronjob Fehlerbericht**: Automatische Benachrichtigung bei E-Mail-Fehlern
 - **Cronjob Retry**: Automatisches erneutes Senden bei temporären Fehlern
 - **YForm-Validator**: E-Mail-Domain-Prüfung für Formulare
+- **YForm Mailer**: E-Mail-Versand beim Speichern (Tablemanager-kompatibel)
 
 ---
 
@@ -74,6 +75,90 @@ text|email|E-Mail|
 validate|email|email|Bitte gültige E-Mail eingeben
 validate|email_domain|email|Diese E-Mail-Domain existiert nicht|0
 ```
+
+---
+
+## ✉️ YForm Mailer (Tablemanager-kompatibel)
+
+Das `mailer` Value ermöglicht E-Mail-Versand beim Speichern eines Datensatzes - direkt im Tablemanager konfigurierbar.
+
+### Features
+
+- **Templates oder direkter Body** - Beides möglich
+- **Dynamische Empfänger** - Aus anderen Tabellenfeldern
+- **Upload-Anhänge** - Einfach Feldnamen angeben
+- **CC, BCC, Reply-To** - Volle PHPMailer-Unterstützung
+- **Versand-Modus** - Immer / Nur bei Neuanlage / Nie (manuell)
+- **Speichert Versandzeitpunkt** - Optional in der DB
+
+### Konfiguration im Tablemanager
+
+1. Neues Feld hinzufügen
+2. Typ: **mailer**
+3. Konfigurieren:
+   - **Template**: YForm E-Mail-Template (optional)
+   - **Empfänger**: E-Mail oder Feldname (z.B. `email`)
+   - **Betreff**: Mit `{{feldname}}` Platzhaltern
+   - **Nachricht**: HTML/Text (wenn kein Template)
+   - **Anhänge**: Upload-Feldnamen kommagetrennt
+   - **Versand-Modus**: Wann soll gesendet werden?
+
+### Pipe-Format
+
+```
+mailer|mail_sent|E-Mail-Versand|kontakt_template|email||{{name}} hat sich angemeldet|email|||dokument,foto|0
+```
+
+### Parameter
+
+| Nr | Parameter | Beschreibung |
+|----|-----------|--------------|
+| 1 | name | Feldname (speichert Versandzeitpunkt) |
+| 2 | label | Bezeichnung im Backend |
+| 3 | template | E-Mail-Template Name |
+| 4 | to | Empfänger (E-Mail oder Feldname) |
+| 5 | subject | Betreff mit Platzhaltern |
+| 6 | body | Nachricht (wenn kein Template) |
+| 7 | reply_to | Reply-To (E-Mail oder Feldname) |
+| 8 | cc | CC-Empfänger |
+| 9 | bcc | BCC-Empfänger |
+| 10 | attachments | Upload-Feldnamen, kommagetrennt |
+| 11 | send_mode | 0=immer, 1=nur neu, 2=nie |
+
+### Versand-Modi
+
+| Modus | Beschreibung |
+|-------|--------------|
+| **0 - Immer** | Bei jedem Speichern |
+| **1 - Nur bei Neuanlage** | Nur beim ersten Speichern |
+| **2 - Nie** | Manuell per EP oder Button |
+
+### Beispiele
+
+**Kontaktformular mit Template:**
+```
+text|name|Name|
+text|email|E-Mail|
+textarea|message|Nachricht|
+mailer|mail_sent|E-Mail|kontakt_tpl|info@firma.de||||email
+```
+
+**Bestellbestätigung mit Anhang:**
+```
+text|kunde_email|Kunden-E-Mail|
+upload|rechnung|Rechnung|
+mailer|bestaetigung_sent||bestellung_tpl|kunde_email||||rechnung|1
+```
+
+### Platzhalter
+
+| Platzhalter | Beschreibung |
+|-------------|--------------|
+| `{{feldname}}` | Wert eines Tabellenfelds |
+| `{{id}}` | ID des Datensatzes |
+| `{{REX_SERVER}}` | Servername |
+| `{{REX_DATE}}` | Datum (TT.MM.JJJJ) |
+| `{{REX_DATETIME}}` | Datum und Uhrzeit |
 
 ---
 

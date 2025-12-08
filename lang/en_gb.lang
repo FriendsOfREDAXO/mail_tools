@@ -139,3 +139,26 @@ yform_validate_email_domain_name = Email field
 yform_validate_email_domain_message = Error message
 yform_validate_email_domain_require_mx = Require MX record
 yform_validate_email_domain_description = Checks if the email domain exists and has a mail server.
+
+# YForm Mailer Value
+mail_tools_mailer_template = Email Template
+mail_tools_mailer_template_notice = Name of YForm email template (optional, if empty Subject/Body will be used)
+mail_tools_mailer_to = Recipient
+mail_tools_mailer_to_notice = Email address or field name (e.g. "email" for dynamic recipient)
+mail_tools_mailer_subject = Subject
+mail_tools_mailer_subject_notice = With placeholders: {{fieldname}}, {{REX_DATE}}, {{REX_SERVER}}
+mail_tools_mailer_body = Message
+mail_tools_mailer_body_notice = HTML or text with placeholders (only when no template is used)
+mail_tools_mailer_reply_to = Reply-To
+mail_tools_mailer_cc = CC
+mail_tools_mailer_bcc = BCC
+mail_tools_mailer_attachments = Attachments (upload fields)
+mail_tools_mailer_attachments_notice = Field names comma-separated, e.g.: document,photo
+mail_tools_mailer_send_mode = Send Mode
+mail_tools_mailer_send_always = Always send
+mail_tools_mailer_send_new_only = Only on create
+mail_tools_mailer_send_never = Never (manual)
+mail_tools_mailer_will_send = Email will be sent on save
+mail_tools_mailer_description = Sends email on save with full PHPMailer support
+mail_tools_mailer_smtp_config = SMTP Configuration
+mail_tools_mailer_smtp_config_notice = Optional: Custom SMTP credentials as JSON. Example: {"host":"smtp.example.com","port":587,"secure":"tls","auth":true,"username":"user","password":"secret"}
