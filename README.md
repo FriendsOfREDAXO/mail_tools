@@ -133,6 +133,47 @@ mailer|mail_sent|E-Mail-Versand|kontakt_template|email||{{name}} hat sich angeme
 | **1 - Nur bei Neuanlage** | Nur beim ersten Speichern |
 | **2 - Nie** | Manuell per EP oder Button |
 
+### Eigene SMTP-Konfiguration
+
+Optional kann für jedes Mailer-Feld eine eigene SMTP-Konfiguration hinterlegt werden - unabhängig von der globalen PHPMailer-Konfiguration.
+
+**JSON-Format im Feld "SMTP-Konfiguration":**
+
+```json
+{
+  "host": "smtp.example.com",
+  "port": 587,
+  "secure": "tls",
+  "auth": true,
+  "username": "user@example.com",
+  "password": "geheim123",
+  "from": "noreply@example.com",
+  "from_name": "Meine App"
+}
+```
+
+**Verfügbare Optionen:**
+
+| Option | Typ | Beschreibung |
+|--------|-----|--------------|
+| `host` | string | SMTP-Server Adresse |
+| `port` | int | Port (25, 465, 587) |
+| `secure` | string | Verschlüsselung: `tls`, `ssl` oder leer |
+| `auth` | bool | Authentifizierung aktivieren |
+| `username` | string | SMTP-Benutzername |
+| `password` | string | SMTP-Passwort |
+| `from` | string | Absender-E-Mail überschreiben |
+| `from_name` | string | Absender-Name überschreiben |
+| `debug` | int | Debug-Level (0-4) |
+| `timeout` | int | Verbindungs-Timeout in Sekunden |
+
+**Anwendungsfälle:**
+
+- Verschiedene Absender für verschiedene Formulare
+- Transaktions-Mails über anderen SMTP-Provider
+- Mandantenfähigkeit mit unterschiedlichen Zugangsdaten
+- Test- vs. Produktiv-Mailserver
+
 ### Beispiele
 
 **Kontaktformular mit Template:**
