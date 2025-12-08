@@ -17,6 +17,8 @@ class Cronjob extends rex_cronjob
         $recipients = $this->getParam('recipients', '');
         $onlyErrors = (bool) $this->getParam('only_errors', true);
         $attachEml = (bool) $this->getParam('attach_eml', false);
+        $filterSubject = trim((string) $this->getParam('filter_subject', ''));
+        $filterRecipient = trim((string) $this->getParam('filter_recipient', ''));
 
         // Empfänger prüfen
         if (empty($recipients)) {
@@ -38,12 +40,15 @@ class Cronjob extends rex_cronjob
             // Noch nicht gemeldete Fehler abrufen
             $newFailedEmails = LogParser::getUnreportedFailedEmails();
 
+            // Filter anwenden
+            $newFailedEmails = $this->applyFilters($newFailedEmails, $filterSubject, $filterRecipient);
+
             // Statistiken sammeln
             $statistics = LogParser::getStatistics();
 
             // Bericht nur senden wenn Fehler vorhanden oder "immer senden" aktiv
             if (empty($newFailedEmails) && $onlyErrors) {
-                $this->setMessage('Keine neuen Fehler gefunden');
+                $this->setMessage('Keine neuen Fehler gefunden (nach Filter)');
                 return true;
             }
 
@@ -73,6 +78,39 @@ class Cronjob extends rex_cronjob
             \rex_logger::logException($e);
             return false;
         }
+    }
+
+    /**
+     * Filtert E-Mails nach Betreff und/oder Empfänger.
+     *
+     * @param array<int, array<string, mixed>> $emails
+     * @return array<int, array<string, mixed>>
+     */
+    private function applyFilters(array $emails, string $filterSubject, string $filterRecipient): array
+    {
+        if ('' === $filterSubject && '' === $filterRecipient) {
+            return $emails;
+        }
+
+        return array_filter($emails, static function ($email) use ($filterSubject, $filterRecipient) {
+            // Betreff-Filter (case-insensitive)
+            if ('' !== $filterSubject) {
+                $subject = $email['subject'] ?? '';
+                if (false === stripos($subject, $filterSubject)) {
+                    return false;
+                }
+            }
+
+            // Empfänger-Filter (case-insensitive)
+            if ('' !== $filterRecipient) {
+                $recipient = $email['recipient'] ?? '';
+                if (false === stripos($recipient, $filterRecipient)) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
     }
 
     public function getTypeName(): string
@@ -105,6 +143,18 @@ class Cronjob extends rex_cronjob
                 'type' => 'checkbox',
                 'options' => [1 => $addon->i18n('config_attach_eml_label')],
                 'default' => 0,
+            ],
+            [
+                'label' => $addon->i18n('config_filter_subject'),
+                'name' => 'filter_subject',
+                'type' => 'text',
+                'notice' => $addon->i18n('config_filter_subject_notice'),
+            ],
+            [
+                'label' => $addon->i18n('config_filter_recipient'),
+                'name' => 'filter_recipient',
+                'type' => 'text',
+                'notice' => $addon->i18n('config_filter_recipient_notice'),
             ],
         ];
     }

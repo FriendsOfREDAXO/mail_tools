@@ -16,6 +16,10 @@ config_recipients = Recipients
 config_recipients_notice = Comma-separated list of email addresses for error reports
 config_only_errors = Send only on errors
 config_only_errors_label = Only send report if new errors were found
+config_filter_subject = Filter: Subject
+config_filter_subject_notice = Only report emails whose subject contains this text (empty = all)
+config_filter_recipient = Filter: Recipient
+config_filter_recipient_notice = Only report emails whose recipient contains this text, e.g. @newsletter.com (empty = all)
 
 # Cronjob
 cronjob_name = E-Mail Error Report

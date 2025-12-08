@@ -16,6 +16,10 @@ config_recipients = Empfänger
 config_recipients_notice = Kommagetrennte Liste von E-Mail-Adressen für Fehlerberichte
 config_only_errors = Nur bei Fehlern senden
 config_only_errors_label = Bericht nur senden, wenn neue Fehler gefunden wurden
+config_filter_subject = Filter: Betreff
+config_filter_subject_notice = Nur E-Mails melden, deren Betreff diesen Text enthält (leer = alle)
+config_filter_recipient = Filter: Empfänger
+config_filter_recipient_notice = Nur E-Mails melden, deren Empfänger diesen Text enthält, z.B. @newsletter.de (leer = alle)
 
 # Cronjob
 cronjob_name = E-Mail Fehlerbericht
