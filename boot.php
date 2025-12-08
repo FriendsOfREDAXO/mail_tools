@@ -17,7 +17,7 @@ if (rex_addon::get('yform')->isAvailable()) {
     rex_yform::addTemplatePath($this->getPath('ytemplates'));
 }
 
-// Im Backend: Statistik-Widget für Dashboard
-if (rex::isBackend() && rex::getUser()) {
-    // Extension Point für Dashboard-Integration könnte hier folgen
+// Im Backend: CSS nur auf der Statistik-Seite laden
+if (rex::isBackend() && rex::getUser() && rex_be_controller::getCurrentPage() == 'phpmailer/mail_tools/stats') {
+    rex_view::addCssFile($this->getAssetsUrl('mail_tools.css'));
 }

@@ -3,6 +3,7 @@
 # Allgemein
 mail_tools_title = E-Mail Tools
 title = E-Mail Tools
+navigation_stats = Statistik
 navigation_log = Fehler-Log
 navigation_test = Test
 navigation_help = Hilfe
@@ -58,6 +59,25 @@ col_error = Fehlermeldung
 stats_today = Heute
 stats_week = Diese Woche
 stats_month = Diesen Monat
+stats_total = Gesamt
+stats_success_rate = Erfolgsquote
+stats_successful = erfolgreich
+stats_failed = fehlgeschlagen
+stats_last_30_days = Versand letzte 30 Tage
+stats_heatmap_title = Versandzeiten (Heatmap)
+stats_own_domain_excluded = Eigene Domain ausgeschlossen: {0}
+stats_top_recipient_domains = Top Empfänger-Domains
+stats_top_sender_domains = Top Absender-Domains
+stats_sender_domains_hint = Reply-To/From aus Kontaktformularen (ohne eigene Domain)
+stats_top_subjects = Top Betreff-Muster
+stats_no_data = Keine Daten vorhanden
+stats_sunday = So
+stats_monday = Mo
+stats_tuesday = Di
+stats_wednesday = Mi
+stats_thursday = Do
+stats_friday = Fr
+stats_saturday = Sa
 stats_total = Gesamt
 
 # YForm Validator
