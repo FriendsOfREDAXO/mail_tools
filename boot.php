@@ -17,7 +17,15 @@ if (rex_addon::get('yform')->isAvailable()) {
     rex_yform::addTemplatePath($this->getPath('ytemplates'));
 }
 
-// Im Backend: CSS nur auf der Statistik-Seite laden
-if (rex::isBackend() && rex::getUser() && rex_be_controller::getCurrentPage() == 'phpmailer/mail_tools/stats') {
-    rex_view::addCssFile($this->getAssetsUrl('mail_tools.css'));
+// Im Backend: CSS nur auf den jeweiligen Seiten laden
+if (rex::isBackend() && rex::getUser()) {
+    $currentPage = rex_be_controller::getCurrentPage();
+    
+    if ($currentPage === 'phpmailer/mail_tools/stats') {
+        rex_view::addCssFile($this->getAssetsUrl('mail_tools.css'));
+    }
+    
+    if ($currentPage === 'phpmailer/mail_tools/diagnostics') {
+        rex_view::addCssFile($this->getAssetsUrl('mail_tools_diagnostics.css'));
+    }
 }

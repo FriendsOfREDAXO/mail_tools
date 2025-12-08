@@ -29,6 +29,7 @@ class SmtpDiagnostics
     private const KNOWN_PROVIDERS = [
         'microsoft365' => [
             'hosts' => ['smtp.office365.com', 'smtp-mail.outlook.com'],
+            'domains' => ['outlook.com', 'outlook.de', 'hotmail.com', 'hotmail.de', 'live.com', 'live.de', 'msn.com'],
             'port' => 587,
             'security' => 'tls',
             'auth' => true,
@@ -42,6 +43,7 @@ class SmtpDiagnostics
         ],
         'gmail' => [
             'hosts' => ['smtp.gmail.com', 'smtp.googlemail.com'],
+            'domains' => ['gmail.com', 'googlemail.com'],
             'port' => 587,
             'security' => 'tls',
             'auth' => true,
@@ -53,8 +55,23 @@ class SmtpDiagnostics
                 'App-Kennwort unter myaccount.google.com/apppasswords erstellen',
             ],
         ],
+        'icloud' => [
+            'hosts' => ['smtp.mail.me.com'],
+            'domains' => ['icloud.com', 'me.com', 'mac.com'],
+            'port' => 587,
+            'security' => 'tls',
+            'auth' => true,
+            'name' => 'Apple iCloud',
+            'help_url' => 'https://support.apple.com/de-de/102525',
+            'notes' => [
+                'App-spezifisches Passwort erforderlich',
+                'Unter appleid.apple.com → Anmeldung und Sicherheit → App-spezifische Passwörter erstellen',
+                '2-Faktor-Authentifizierung muss aktiviert sein',
+            ],
+        ],
         'ionos' => [
             'hosts' => ['smtp.ionos.de', 'smtp.ionos.com', 'smtp.1und1.de'],
+            'domains' => ['ionos.de', '1und1.de'],
             'port' => 587,
             'security' => 'tls',
             'auth' => true,
@@ -67,6 +84,7 @@ class SmtpDiagnostics
         ],
         'strato' => [
             'hosts' => ['smtp.strato.de', 'smtp.strato.com'],
+            'domains' => ['strato.de'],
             'port' => 465,
             'security' => 'ssl',
             'auth' => true,
@@ -79,6 +97,7 @@ class SmtpDiagnostics
         ],
         'hosteurope' => [
             'hosts' => ['smtp.hosteurope.de'],
+            'domains' => ['hosteurope.de'],
             'port' => 587,
             'security' => 'tls',
             'auth' => true,
@@ -87,7 +106,8 @@ class SmtpDiagnostics
             'notes' => [],
         ],
         'allinkl' => [
-            'hosts' => ['smtp.all-inkl.com', 'w00xxxxx.kasserver.com'],
+            'hosts' => ['smtp.all-inkl.com'],
+            'domains' => ['all-inkl.com'],
             'port' => 587,
             'security' => 'tls',
             'auth' => true,
@@ -95,6 +115,32 @@ class SmtpDiagnostics
             'help_url' => 'https://all-inkl.com/wichtig/anleitungen/',
             'notes' => [
                 'KAS-Benutzername oder E-Mail-Adresse verwenden',
+            ],
+        ],
+        'gmx' => [
+            'hosts' => ['mail.gmx.net'],
+            'domains' => ['gmx.de', 'gmx.net', 'gmx.at', 'gmx.ch'],
+            'port' => 587,
+            'security' => 'tls',
+            'auth' => true,
+            'name' => 'GMX',
+            'help_url' => 'https://hilfe.gmx.net/',
+            'notes' => [
+                'SMTP-Versand muss in den GMX-Einstellungen aktiviert werden',
+                'E-Mail-Adresse als Benutzername',
+            ],
+        ],
+        'webde' => [
+            'hosts' => ['smtp.web.de'],
+            'domains' => ['web.de'],
+            'port' => 587,
+            'security' => 'tls',
+            'auth' => true,
+            'name' => 'WEB.DE',
+            'help_url' => 'https://hilfe.web.de/',
+            'notes' => [
+                'SMTP-Versand muss in den WEB.DE-Einstellungen aktiviert werden',
+                'E-Mail-Adresse als Benutzername',
             ],
         ],
     ];
@@ -979,66 +1025,67 @@ class SmtpDiagnostics
             return null;
         }
 
-        $domain = substr(strrchr($email, '@'), 1);
+        $domain = strtolower(substr(strrchr($email, '@'), 1));
         
-        // MX-Records abrufen
-        $mxRecords = [];
-        if (!getmxrr($domain, $mxRecords)) {
-            return null;
-        }
-
-        $mxHost = strtolower($mxRecords[0] ?? '');
-        
-        // Provider erkennen
-        $detectedProvider = null;
-        
-        if (str_contains($mxHost, 'outlook') || str_contains($mxHost, 'microsoft') || str_contains($mxHost, 'office365')) {
-            $detectedProvider = 'microsoft365';
-        } elseif (str_contains($mxHost, 'google') || str_contains($mxHost, 'gmail')) {
-            $detectedProvider = 'gmail';
-        } elseif (str_contains($mxHost, 'ionos') || str_contains($mxHost, '1und1')) {
-            $detectedProvider = 'ionos';
-        } elseif (str_contains($mxHost, 'strato')) {
-            $detectedProvider = 'strato';
-        } elseif (str_contains($mxHost, 'hosteurope')) {
-            $detectedProvider = 'hosteurope';
-        } elseif (str_contains($mxHost, 'kasserver') || str_contains($mxHost, 'all-inkl')) {
-            $detectedProvider = 'allinkl';
-        }
-
-        if ($detectedProvider && isset(self::KNOWN_PROVIDERS[$detectedProvider])) {
-            $provider = self::KNOWN_PROVIDERS[$detectedProvider];
-            return [
-                'provider' => $detectedProvider,
-                'provider_name' => $provider['name'],
-                'host' => $provider['hosts'][0],
-                'port' => $provider['port'],
-                'security' => $provider['security'],
-                'auth' => $provider['auth'],
-                'username' => $email,
-                'notes' => $provider['notes'],
-                'help_url' => $provider['help_url'],
-                'detected_via' => 'MX: ' . $mxHost,
-            ];
-        }
-
-        // Zuerst: Prüfen ob aktuell konfigurierter Host erreichbar ist
-        $currentHost = $this->config['host'];
-        if (!empty($currentHost)) {
-            $ip = gethostbyname($currentHost);
-            if ($ip !== $currentHost) {
-                // Aktueller Host ist erreichbar, nicht ändern!
-                $currentPort = $this->config['port'] ?: 587;
+        // 1. Zuerst: Domain direkt gegen bekannte Provider prüfen
+        foreach (self::KNOWN_PROVIDERS as $providerKey => $provider) {
+            if (isset($provider['domains']) && in_array($domain, $provider['domains'], true)) {
                 return [
-                    'provider' => 'current',
-                    'provider_name' => rex_i18n::msg('mail_tools_diag_current_config'),
-                    'host' => $currentHost,
-                    'port' => $currentPort,
-                    'security' => $currentPort === 465 ? 'ssl' : ($currentPort === 587 ? 'tls' : ''),
-                    'auth' => true,
+                    'provider' => $providerKey,
+                    'provider_name' => $provider['name'],
+                    'host' => $provider['hosts'][0],
+                    'port' => $provider['port'],
+                    'security' => $provider['security'],
+                    'auth' => $provider['auth'],
                     'username' => $email,
-                    'notes' => [rex_i18n::msg('mail_tools_diag_host_already_configured')],
-                    'detected_via' => rex_i18n::msg('mail_tools_diag_current_host_valid', $currentHost),
+                    'notes' => $provider['notes'],
+                    'help_url' => $provider['help_url'],
+                    'detected_via' => rex_i18n::msg('mail_tools_diag_detected_via_domain', $domain),
+                ];
+            }
+        }
+        
+        // 2. MX-Records abrufen und gegen bekannte Provider prüfen
+        $mxRecords = [];
+        if (getmxrr($domain, $mxRecords) && !empty($mxRecords)) {
+            $mxHost = strtolower($mxRecords[0]);
+            
+            // Provider anhand MX-Record erkennen
+            $detectedProvider = null;
+            
+            if (str_contains($mxHost, 'outlook') || str_contains($mxHost, 'microsoft') || str_contains($mxHost, 'office365')) {
+                $detectedProvider = 'microsoft365';
+            } elseif (str_contains($mxHost, 'google') || str_contains($mxHost, 'gmail')) {
+                $detectedProvider = 'gmail';
+            } elseif (str_contains($mxHost, 'icloud') || str_contains($mxHost, 'apple') || str_contains($mxHost, 'me.com')) {
+                $detectedProvider = 'icloud';
+            } elseif (str_contains($mxHost, 'ionos') || str_contains($mxHost, '1und1')) {
+                $detectedProvider = 'ionos';
+            } elseif (str_contains($mxHost, 'strato')) {
+                $detectedProvider = 'strato';
+            } elseif (str_contains($mxHost, 'hosteurope')) {
+                $detectedProvider = 'hosteurope';
+            } elseif (str_contains($mxHost, 'kasserver') || str_contains($mxHost, 'all-inkl')) {
+                $detectedProvider = 'allinkl';
+            } elseif (str_contains($mxHost, 'gmx')) {
+                $detectedProvider = 'gmx';
+            } elseif (str_contains($mxHost, 'web.de')) {
+                $detectedProvider = 'webde';
+            }
+
+            if ($detectedProvider && isset(self::KNOWN_PROVIDERS[$detectedProvider])) {
+                $provider = self::KNOWN_PROVIDERS[$detectedProvider];
+                return [
+                    'provider' => $detectedProvider,
+                    'provider_name' => $provider['name'],
+                    'host' => $provider['hosts'][0],
+                    'port' => $provider['port'],
+                    'security' => $provider['security'],
+                    'auth' => $provider['auth'],
+                    'username' => $email,
+                    'notes' => $provider['notes'],
+                    'help_url' => $provider['help_url'],
+                    'detected_via' => 'MX: ' . $mxHost,
                 ];
             }
         }
@@ -1142,6 +1189,7 @@ class SmtpDiagnostics
         $result = [
             'success' => false,
             'message' => '',
+            'help' => [],
             'debug' => '',
         ];
 
@@ -1160,13 +1208,182 @@ class SmtpDiagnostics
                 $result['message'] = rex_i18n::msg('mail_tools_diag_connection_successful');
                 $mailer->smtpClose();
             } else {
-                $result['message'] = rex_i18n::msg('mail_tools_diag_connection_failed_detail', $mailer->ErrorInfo);
+                $errorInfo = $mailer->ErrorInfo;
+                $result['message'] = $errorInfo;
+                $result['help'] = $this->getHelpForError($errorInfo);
             }
         } catch (\Exception $e) {
             $result['message'] = $e->getMessage();
+            $result['help'] = $this->getHelpForError($e->getMessage());
         }
 
         return $result;
+    }
+
+    /**
+     * Sendet eine Test-E-Mail mit verständlichen Fehlermeldungen
+     * @return array<string, mixed>
+     */
+    public function sendTestMail(string $recipient): array
+    {
+        $result = [
+            'success' => false,
+            'message' => '',
+            'explanation' => '',
+            'help' => [],
+            'debug' => '',
+        ];
+
+        if (!filter_var($recipient, FILTER_VALIDATE_EMAIL)) {
+            $result['message'] = rex_i18n::msg('mail_tools_diag_invalid_recipient');
+            return $result;
+        }
+
+        try {
+            $mailer = new rex_mailer();
+            
+            // Debug aktivieren
+            $mailer->SMTPDebug = 3;
+            $mailer->Debugoutput = function ($str, $level) use (&$result) {
+                $result['debug'] .= "[$level] $str\n";
+            };
+
+            // Test-E-Mail konfigurieren
+            $mailer->addAddress($recipient);
+            $mailer->Subject = rex_i18n::msg('mail_tools_diag_test_subject', date('d.m.Y H:i:s'));
+            $mailer->Body = rex_i18n::msg('mail_tools_diag_test_body', rex::getServerName(), date('d.m.Y H:i:s'));
+            $mailer->AltBody = strip_tags($mailer->Body);
+
+            if ($mailer->send()) {
+                $result['success'] = true;
+                $result['message'] = rex_i18n::msg('mail_tools_diag_mail_sent_to', $recipient);
+            } else {
+                $errorInfo = $mailer->ErrorInfo;
+                $result['message'] = $errorInfo;
+                
+                // Verständliche Erklärung und Hilfe
+                $analysis = $this->analyzeError($errorInfo);
+                $result['explanation'] = $analysis['explanation'];
+                $result['help'] = $analysis['help'];
+            }
+        } catch (\Exception $e) {
+            $result['message'] = $e->getMessage();
+            $analysis = $this->analyzeError($e->getMessage());
+            $result['explanation'] = $analysis['explanation'];
+            $result['help'] = $analysis['help'];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Analysiert einen Fehler und gibt verständliche Erklärung + Hilfe zurück
+     * @return array{explanation: string, help: array<string>}
+     */
+    private function analyzeError(string $error): array
+    {
+        $errorLower = strtolower($error);
+        
+        // Authentifizierungsfehler
+        if (str_contains($errorLower, 'authentication') || 
+            str_contains($errorLower, 'username and password') ||
+            str_contains($errorLower, '535') ||
+            str_contains($errorLower, 'credentials')) {
+            return [
+                'explanation' => rex_i18n::msg('mail_tools_diag_error_auth_explain'),
+                'help' => [
+                    rex_i18n::msg('mail_tools_diag_help_check_username'),
+                    rex_i18n::msg('mail_tools_diag_help_check_password'),
+                    rex_i18n::msg('mail_tools_diag_help_app_password'),
+                ],
+            ];
+        }
+        
+        // Verbindung abgelehnt
+        if (str_contains($errorLower, 'connection refused') ||
+            str_contains($errorLower, 'connection timed out') ||
+            str_contains($errorLower, 'could not connect')) {
+            return [
+                'explanation' => rex_i18n::msg('mail_tools_diag_error_connection_explain'),
+                'help' => [
+                    rex_i18n::msg('mail_tools_diag_help_check_host'),
+                    rex_i18n::msg('mail_tools_diag_help_check_port'),
+                    rex_i18n::msg('mail_tools_diag_help_check_firewall'),
+                ],
+            ];
+        }
+        
+        // DNS/Host nicht gefunden
+        if (str_contains($errorLower, 'getaddrinfo') ||
+            str_contains($errorLower, 'no such host') ||
+            str_contains($errorLower, 'name or service not known')) {
+            return [
+                'explanation' => rex_i18n::msg('mail_tools_diag_error_dns_explain'),
+                'help' => [
+                    rex_i18n::msg('mail_tools_diag_help_check_hostname'),
+                    rex_i18n::msg('mail_tools_diag_help_typo_hostname'),
+                ],
+            ];
+        }
+        
+        // SSL/TLS-Fehler
+        if (str_contains($errorLower, 'ssl') ||
+            str_contains($errorLower, 'tls') ||
+            str_contains($errorLower, 'certificate') ||
+            str_contains($errorLower, 'crypto')) {
+            return [
+                'explanation' => rex_i18n::msg('mail_tools_diag_error_ssl_explain'),
+                'help' => [
+                    rex_i18n::msg('mail_tools_diag_help_check_encryption'),
+                    rex_i18n::msg('mail_tools_diag_help_port_encryption'),
+                ],
+            ];
+        }
+        
+        // Absender abgelehnt
+        if (str_contains($errorLower, 'sender') ||
+            str_contains($errorLower, '550') ||
+            str_contains($errorLower, 'relay') ||
+            str_contains($errorLower, 'not allowed')) {
+            return [
+                'explanation' => rex_i18n::msg('mail_tools_diag_error_sender_explain'),
+                'help' => [
+                    rex_i18n::msg('mail_tools_diag_help_check_sender'),
+                    rex_i18n::msg('mail_tools_diag_help_sender_match'),
+                ],
+            ];
+        }
+        
+        // Timeout
+        if (str_contains($errorLower, 'timeout')) {
+            return [
+                'explanation' => rex_i18n::msg('mail_tools_diag_error_timeout_explain'),
+                'help' => [
+                    rex_i18n::msg('mail_tools_diag_help_check_port'),
+                    rex_i18n::msg('mail_tools_diag_help_check_firewall'),
+                    rex_i18n::msg('mail_tools_diag_help_increase_timeout'),
+                ],
+            ];
+        }
+        
+        // Generische Hilfe
+        return [
+            'explanation' => rex_i18n::msg('mail_tools_diag_error_generic_explain'),
+            'help' => [
+                rex_i18n::msg('mail_tools_diag_help_check_settings'),
+                rex_i18n::msg('mail_tools_diag_help_contact_provider'),
+            ],
+        ];
+    }
+
+    /**
+     * Gibt Hilfe-Tipps basierend auf Fehlermeldung zurück
+     * @return array<string>
+     */
+    private function getHelpForError(string $error): array
+    {
+        $analysis = $this->analyzeError($error);
+        return $analysis['help'];
     }
 
     /**

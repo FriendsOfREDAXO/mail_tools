@@ -317,3 +317,51 @@ mail_tools_diag_auto_detected = Automatisch erkannt - bitte Zugangsdaten prüfen
 mail_tools_diag_current_config = Aktuelle Konfiguration
 mail_tools_diag_host_already_configured = Der aktuell konfigurierte SMTP-Server ist erreichbar und funktioniert.
 mail_tools_diag_current_host_valid = Aktueller Host "{0}" ist gültig
+mail_tools_diag_detected_via_domain = Erkannt über Domain: {0}
+mail_tools_diag_username = Benutzername
+
+# Testmail-Versand
+mail_tools_diag_send_testmail = Test-E-Mail senden
+mail_tools_diag_testmail_desc = Senden Sie eine Test-E-Mail, um zu prüfen, ob die Konfiguration funktioniert.
+mail_tools_diag_recipient = Empfänger
+mail_tools_diag_enter_recipient = Bitte geben Sie eine Empfänger-Adresse ein.
+mail_tools_diag_sending = Sende E-Mail...
+mail_tools_diag_send_test = Test-E-Mail senden
+mail_tools_diag_invalid_recipient = Die angegebene E-Mail-Adresse ist ungültig.
+mail_tools_diag_test_subject = PHPMailer-Test | {0}
+mail_tools_diag_test_body = <h2>Test-E-Mail</h2><p>Diese E-Mail wurde als Test von <strong>{0}</strong> gesendet.</p><p>Zeitpunkt: {1}</p><p>Wenn Sie diese E-Mail erhalten haben, funktioniert Ihre E-Mail-Konfiguration korrekt!</p>
+mail_tools_diag_mail_sent_to = Test-E-Mail wurde erfolgreich an {0} gesendet!
+mail_tools_diag_connection_ok = Verbindung erfolgreich
+mail_tools_diag_connection_failed = Verbindung fehlgeschlagen
+mail_tools_diag_mail_sent = E-Mail gesendet
+mail_tools_diag_mail_failed = E-Mail konnte nicht gesendet werden
+mail_tools_diag_error = Fehler
+mail_tools_diag_what_means = Was bedeutet das?
+mail_tools_diag_possible_solutions = Mögliche Lösungen
+mail_tools_diag_technical_details = Technische Details
+
+# Fehler-Erklärungen
+mail_tools_diag_error_auth_explain = Die Anmeldung am SMTP-Server ist fehlgeschlagen. Das Passwort oder der Benutzername ist falsch.
+mail_tools_diag_error_connection_explain = Die Verbindung zum SMTP-Server konnte nicht hergestellt werden. Der Server ist nicht erreichbar oder der Port ist blockiert.
+mail_tools_diag_error_dns_explain = Der angegebene SMTP-Server wurde nicht gefunden. Möglicherweise ist der Hostname falsch geschrieben.
+mail_tools_diag_error_ssl_explain = Es gibt ein Problem mit der verschlüsselten Verbindung. Die Verschlüsselungseinstellungen passen nicht zum Server.
+mail_tools_diag_error_sender_explain = Der SMTP-Server hat den Absender abgelehnt. Die Absender-Adresse muss oft mit dem Benutzerkonto übereinstimmen.
+mail_tools_diag_error_timeout_explain = Die Verbindung zum Server hat zu lange gedauert und wurde abgebrochen.
+mail_tools_diag_error_generic_explain = Beim Senden der E-Mail ist ein Fehler aufgetreten. Bitte prüfen Sie die Einstellungen.
+
+# Hilfe-Texte
+mail_tools_diag_help_check_username = Prüfen Sie, ob der Benutzername korrekt ist (oft die vollständige E-Mail-Adresse)
+mail_tools_diag_help_check_password = Prüfen Sie, ob das Passwort korrekt eingegeben wurde
+mail_tools_diag_help_app_password = Bei 2-Faktor-Authentifizierung: Verwenden Sie ein App-Passwort statt des normalen Passworts
+mail_tools_diag_help_check_host = Prüfen Sie, ob der SMTP-Server korrekt angegeben ist
+mail_tools_diag_help_check_port = Prüfen Sie, ob der Port korrekt ist (587 für TLS, 465 für SSL, 25 für unverschlüsselt)
+mail_tools_diag_help_check_firewall = Stellen Sie sicher, dass keine Firewall die Verbindung blockiert
+mail_tools_diag_help_check_hostname = Prüfen Sie den Hostnamen auf Tippfehler
+mail_tools_diag_help_typo_hostname = Häufige Fehler: smtp.domain.de statt mail.domain.de oder umgekehrt
+mail_tools_diag_help_check_encryption = Prüfen Sie die Verschlüsselungseinstellung (TLS/SSL/keine)
+mail_tools_diag_help_port_encryption = Port 587 benötigt TLS, Port 465 benötigt SSL
+mail_tools_diag_help_check_sender = Prüfen Sie die Absender-Adresse
+mail_tools_diag_help_sender_match = Die Absender-Adresse muss oft mit dem angemeldeten Benutzerkonto übereinstimmen
+mail_tools_diag_help_increase_timeout = Erhöhen Sie ggf. den Timeout-Wert in den Einstellungen
+mail_tools_diag_help_check_settings = Prüfen Sie alle Einstellungen in der PHPMailer-Konfiguration
+mail_tools_diag_help_contact_provider = Wenden Sie sich an Ihren E-Mail-Provider für die korrekten Einstellungen

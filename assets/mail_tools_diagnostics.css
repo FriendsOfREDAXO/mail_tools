@@ -1,0 +1,510 @@
+/**
+ * Mail Tools - Diagnose CSS
+ * Stile für die SMTP-Diagnose-Seite
+ * Pattern: Dark als Default, Light via prefers-color-scheme und rex-theme-light
+ */
+
+/* ==========================================================================
+   CSS Variablen - Dark Theme (Default)
+   ========================================================================== */
+.mail-tools-diag {
+    --diag-ok: #48bb78;
+    --diag-ok-bg: rgba(72, 187, 120, 0.15);
+    --diag-ok-text: #9ae6b4;
+    --diag-warning: #ed8936;
+    --diag-warning-bg: rgba(237, 137, 54, 0.15);
+    --diag-warning-text: #fbd38d;
+    --diag-error: #fc8181;
+    --diag-error-bg: rgba(252, 129, 129, 0.15);
+    --diag-error-text: #feb2b2;
+    --diag-info: #63b3ed;
+    --diag-info-bg: rgba(99, 179, 237, 0.15);
+    --diag-info-text: #90cdf4;
+    --diag-bg: #2d3748;
+    --diag-border: #4a5568;
+    --diag-text: #e2e8f0;
+    --diag-muted: #a0aec0;
+}
+
+/* ==========================================================================
+   System Light Theme - Fallback wenn keine REDAXO Theme Class
+   ========================================================================== */
+@media (prefers-color-scheme: light) {
+    body:not(.rex-theme-dark) .mail-tools-diag {
+        --diag-ok: #198754;
+        --diag-ok-bg: rgba(25, 135, 84, 0.12);
+        --diag-ok-text: #0f5132;
+        --diag-warning: #fd7e14;
+        --diag-warning-bg: rgba(253, 126, 20, 0.12);
+        --diag-warning-text: #984c0c;
+        --diag-error: #dc3545;
+        --diag-error-bg: rgba(220, 53, 69, 0.12);
+        --diag-error-text: #842029;
+        --diag-info: #0d6efd;
+        --diag-info-bg: rgba(13, 110, 253, 0.12);
+        --diag-info-text: #084298;
+        --diag-bg: #fff;
+        --diag-border: #dee2e6;
+        --diag-text: #212529;
+        --diag-muted: #6c757d;
+    }
+}
+
+/* ==========================================================================
+   REDAXO Light Theme - höchste Priorität
+   ========================================================================== */
+body.rex-theme-light .mail-tools-diag {
+    --diag-ok: #198754 !important;
+    --diag-ok-bg: rgba(25, 135, 84, 0.12) !important;
+    --diag-ok-text: #0f5132 !important;
+    --diag-warning: #fd7e14 !important;
+    --diag-warning-bg: rgba(253, 126, 20, 0.12) !important;
+    --diag-warning-text: #984c0c !important;
+    --diag-error: #dc3545 !important;
+    --diag-error-bg: rgba(220, 53, 69, 0.12) !important;
+    --diag-error-text: #842029 !important;
+    --diag-info: #0d6efd !important;
+    --diag-info-bg: rgba(13, 110, 253, 0.12) !important;
+    --diag-info-text: #084298 !important;
+    --diag-bg: #fff !important;
+    --diag-border: #dee2e6 !important;
+    --diag-text: #212529 !important;
+    --diag-muted: #6c757d !important;
+}
+
+/* ==========================================================================
+   REDAXO Dark Theme - höchste Priorität
+   ========================================================================== */
+body.rex-theme-dark .mail-tools-diag {
+    --diag-ok: #48bb78 !important;
+    --diag-ok-bg: rgba(72, 187, 120, 0.15) !important;
+    --diag-ok-text: #9ae6b4 !important;
+    --diag-warning: #ed8936 !important;
+    --diag-warning-bg: rgba(237, 137, 54, 0.15) !important;
+    --diag-warning-text: #fbd38d !important;
+    --diag-error: #fc8181 !important;
+    --diag-error-bg: rgba(252, 129, 129, 0.15) !important;
+    --diag-error-text: #feb2b2 !important;
+    --diag-info: #63b3ed !important;
+    --diag-info-bg: rgba(99, 179, 237, 0.15) !important;
+    --diag-info-text: #90cdf4 !important;
+    --diag-bg: #2d3748 !important;
+    --diag-border: #4a5568 !important;
+    --diag-text: #e2e8f0 !important;
+    --diag-muted: #a0aec0 !important;
+}
+
+/* ==========================================================================
+   Karten (Cards)
+   ========================================================================== */
+.mail-tools-diag-card {
+    background: var(--diag-bg);
+    border: 1px solid var(--diag-border);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.mail-tools-diag-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--diag-border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mail-tools-diag-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--diag-text);
+}
+
+.mail-tools-diag-body {
+    padding: 20px;
+}
+
+/* ==========================================================================
+   Status-Badges
+   ========================================================================== */
+.mail-tools-diag-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.mail-tools-diag-status-ok {
+    background: var(--diag-ok-bg);
+    color: var(--diag-ok-text);
+}
+
+.mail-tools-diag-status-warning {
+    background: var(--diag-warning-bg);
+    color: var(--diag-warning-text);
+}
+
+.mail-tools-diag-status-error {
+    background: var(--diag-error-bg);
+    color: var(--diag-error-text);
+}
+
+.mail-tools-diag-status-info {
+    background: var(--diag-info-bg);
+    color: var(--diag-info-text);
+}
+
+/* ==========================================================================
+   Tabellen
+   ========================================================================== */
+.mail-tools-diag-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mail-tools-diag-table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--diag-border);
+    vertical-align: top;
+    color: var(--diag-text);
+}
+
+.mail-tools-diag-table tr:last-child td {
+    border-bottom: none;
+}
+
+.mail-tools-diag-table .label-col {
+    width: 200px;
+    color: var(--diag-muted);
+    font-weight: 500;
+}
+
+.mail-tools-diag-hint {
+    font-size: 12px;
+    color: var(--diag-muted);
+    margin-top: 4px;
+}
+
+/* ==========================================================================
+   Issues (Probleme)
+   ========================================================================== */
+.mail-tools-diag-issues {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.mail-tools-diag-issues li {
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    background: var(--diag-error-bg);
+    border-left: 3px solid var(--diag-error);
+    border-radius: 0 4px 4px 0;
+    color: var(--diag-error-text);
+}
+
+/* ==========================================================================
+   Empfehlungen (Recommendations)
+   ========================================================================== */
+.mail-tools-diag-recommendations {
+    display: grid;
+    gap: 15px;
+}
+
+.mail-tools-diag-rec-card {
+    border: 1px solid var(--diag-border);
+    border-radius: 6px;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.mail-tools-diag-rec-card.auto-fix {
+    border-color: var(--diag-ok);
+    background: var(--diag-ok-bg);
+}
+
+.mail-tools-diag-rec-card.security {
+    border-color: var(--diag-warning);
+    background: var(--diag-warning-bg);
+}
+
+.mail-tools-diag-rec-content h4 {
+    margin: 0 0 5px 0;
+    font-size: 14px;
+    color: var(--diag-text);
+}
+
+.mail-tools-diag-rec-content p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--diag-muted);
+}
+
+/* ==========================================================================
+   Gesamtstatus (Overall)
+   ========================================================================== */
+.mail-tools-diag-overall {
+    text-align: center;
+    padding: 30px;
+}
+
+.mail-tools-diag-overall-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.mail-tools-diag-overall-icon.ok {
+    color: var(--diag-ok);
+}
+
+.mail-tools-diag-overall-icon.warning {
+    color: var(--diag-warning);
+}
+
+.mail-tools-diag-overall-icon.error {
+    color: var(--diag-error);
+}
+
+.mail-tools-diag-overall h2 {
+    color: var(--diag-text);
+    margin: 0 0 10px 0;
+}
+
+.mail-tools-diag-provider {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--diag-info-bg);
+    border-radius: 20px;
+    margin-bottom: 15px;
+    color: var(--diag-info-text);
+}
+
+/* ==========================================================================
+   Loading / Spinner
+   ========================================================================== */
+.mail-tools-diag-loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--diag-muted);
+}
+
+.mail-tools-diag-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--diag-border);
+    border-top-color: var(--diag-info);
+    border-radius: 50%;
+    animation: mail-tools-spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes mail-tools-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ==========================================================================
+   Debug Output
+   ========================================================================== */
+.mail-tools-diag-debug {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 15px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* ==========================================================================
+   Actions (Buttons)
+   ========================================================================== */
+.mail-tools-diag-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   Auto-Config Box
+   ========================================================================== */
+.mail-tools-auto-config {
+    background: linear-gradient(135deg, var(--diag-info-bg) 0%, var(--diag-ok-bg) 100%);
+    border: 1px dashed var(--diag-info);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.mail-tools-auto-config h4 {
+    margin: 0 0 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--diag-text);
+}
+
+.mail-tools-auto-config-form {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.mail-tools-auto-config-form .form-group {
+    flex: 1;
+    margin: 0;
+}
+
+/* ==========================================================================
+   Testmail-Box
+   ========================================================================== */
+.mail-tools-diag-testbox {
+    background: var(--diag-bg);
+    border: 1px solid var(--diag-border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.mail-tools-diag-testbox h4 {
+    margin: 0 0 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--diag-text);
+}
+
+.mail-tools-diag-testform {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.mail-tools-diag-testform .form-group {
+    flex: 1;
+    min-width: 250px;
+    margin: 0;
+}
+
+.mail-tools-diag-testform label {
+    color: var(--diag-text);
+}
+
+.mail-tools-diag-testbuttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* ==========================================================================
+   Hilfe-Box (bei Fehlern)
+   ========================================================================== */
+.mail-tools-diag-help {
+    background: var(--diag-info-bg);
+    border: 1px solid var(--diag-info);
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.mail-tools-diag-help h5 {
+    margin: 0 0 10px 0;
+    color: var(--diag-info-text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mail-tools-diag-help ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.mail-tools-diag-help li {
+    margin-bottom: 5px;
+    color: var(--diag-text);
+}
+
+/* ==========================================================================
+   Erklärung-Box (bei Fehlern)
+   ========================================================================== */
+.mail-tools-diag-explanation {
+    background: var(--diag-warning-bg);
+    border: 1px solid var(--diag-warning);
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 15px;
+}
+
+.mail-tools-diag-explanation h5 {
+    margin: 0 0 10px 0;
+    color: var(--diag-warning-text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mail-tools-diag-explanation p {
+    margin: 0;
+    color: var(--diag-text);
+}
+
+/* ==========================================================================
+   Details (technische Details)
+   ========================================================================== */
+.mail-tools-diag-details {
+    margin-top: 15px;
+}
+
+.mail-tools-diag-details summary {
+    cursor: pointer;
+    color: var(--diag-muted);
+    padding: 10px 0;
+}
+
+.mail-tools-diag-details summary:hover {
+    color: var(--diag-text);
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+@media (max-width: 768px) {
+    .mail-tools-diag-table .label-col {
+        width: 120px;
+    }
+    
+    .mail-tools-diag-rec-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .mail-tools-auto-config-form {
+        flex-direction: column;
+    }
+    
+    .mail-tools-diag-testform {
+        flex-direction: column;
+    }
+    
+    .mail-tools-diag-testbuttons {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .mail-tools-diag-testbuttons .btn {
+        width: 100%;
+    }
+}

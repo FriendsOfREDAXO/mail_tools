@@ -316,3 +316,51 @@ mail_tools_diag_auto_detected = Automatically detected - please verify credentia
 mail_tools_diag_current_config = Current Configuration
 mail_tools_diag_host_already_configured = The currently configured SMTP server is reachable and working.
 mail_tools_diag_current_host_valid = Current host "{0}" is valid
+mail_tools_diag_detected_via_domain = Detected via domain: {0}
+mail_tools_diag_username = Username
+
+# Test Mail
+mail_tools_diag_send_testmail = Send Test Email
+mail_tools_diag_testmail_desc = Send a test email to verify your configuration is working correctly.
+mail_tools_diag_recipient = Recipient
+mail_tools_diag_enter_recipient = Please enter a recipient address.
+mail_tools_diag_sending = Sending email...
+mail_tools_diag_send_test = Send Test Email
+mail_tools_diag_invalid_recipient = The specified email address is invalid.
+mail_tools_diag_test_subject = PHPMailer Test | {0}
+mail_tools_diag_test_body = <h2>Test Email</h2><p>This email was sent as a test from <strong>{0}</strong>.</p><p>Time: {1}</p><p>If you received this email, your email configuration is working correctly!</p>
+mail_tools_diag_mail_sent_to = Test email was successfully sent to {0}!
+mail_tools_diag_connection_ok = Connection Successful
+mail_tools_diag_connection_failed = Connection Failed
+mail_tools_diag_mail_sent = Email Sent
+mail_tools_diag_mail_failed = Email could not be sent
+mail_tools_diag_error = Error
+mail_tools_diag_what_means = What does this mean?
+mail_tools_diag_possible_solutions = Possible Solutions
+mail_tools_diag_technical_details = Technical Details
+
+# Error Explanations
+mail_tools_diag_error_auth_explain = Login to the SMTP server failed. The password or username is incorrect.
+mail_tools_diag_error_connection_explain = Could not establish a connection to the SMTP server. The server is unreachable or the port is blocked.
+mail_tools_diag_error_dns_explain = The specified SMTP server was not found. The hostname may be misspelled.
+mail_tools_diag_error_ssl_explain = There is a problem with the encrypted connection. The encryption settings do not match the server.
+mail_tools_diag_error_sender_explain = The SMTP server rejected the sender. The sender address often must match the user account.
+mail_tools_diag_error_timeout_explain = The connection to the server took too long and was aborted.
+mail_tools_diag_error_generic_explain = An error occurred while sending the email. Please check your settings.
+
+# Help Texts
+mail_tools_diag_help_check_username = Check if the username is correct (often the full email address)
+mail_tools_diag_help_check_password = Check if the password was entered correctly
+mail_tools_diag_help_app_password = With 2-factor authentication: Use an app password instead of your regular password
+mail_tools_diag_help_check_host = Check if the SMTP server is specified correctly
+mail_tools_diag_help_check_port = Check if the port is correct (587 for TLS, 465 for SSL, 25 for unencrypted)
+mail_tools_diag_help_check_firewall = Make sure no firewall is blocking the connection
+mail_tools_diag_help_check_hostname = Check the hostname for typos
+mail_tools_diag_help_typo_hostname = Common errors: smtp.domain.com instead of mail.domain.com or vice versa
+mail_tools_diag_help_check_encryption = Check the encryption setting (TLS/SSL/none)
+mail_tools_diag_help_port_encryption = Port 587 requires TLS, port 465 requires SSL
+mail_tools_diag_help_check_sender = Check the sender address
+mail_tools_diag_help_sender_match = The sender address often must match the authenticated user account
+mail_tools_diag_help_increase_timeout = Consider increasing the timeout value in settings
+mail_tools_diag_help_check_settings = Check all settings in the PHPMailer configuration
+mail_tools_diag_help_contact_provider = Contact your email provider for the correct settings

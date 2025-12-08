@@ -1,15 +1,76 @@
 # Mail Tools für REDAXO
 
-Ein REDAXO AddOn mit nützlichen E-Mail-Werkzeugen für Überwachung und Validierung.
+Ein REDAXO AddOn mit nützlichen E-Mail-Werkzeugen für Überwachung, Diagnose und Validierung.
 
-## Features
+Features: 
+- SMTP-Diagnose mit verständlichen Hilfestellungen
+- Testmail-Versand mit detaillierter Fehleranalyse
+- Mail-Statistik mit Heatmap und Erfolgsquote
+- Fehler-Log mit Cronjob-Benachrichtigung
+- Automatischer Retry bei temporären Fehlern
+- YForm-Validator für E-Mail-Domain-Prüfung
+- YForm Mailer Value für E-Mail-Versand
 
+## Features im Detail
+
+- **SMTP-Diagnose**: Umfassende Prüfung der E-Mail-Konfiguration mit verständlichen Hilfestellungen
+- **Testmail-Versand**: Schneller Test mit detaillierter Fehleranalyse
+- **Mail-Statistik**: Übersicht über Versandvolumen, Erfolgsquote und Versandzeiten (Heatmap)
 - **Domain-Validator**: Prüft E-Mail-Domains via DNS/MX-Lookup
 - **Fehler-Log**: Übersicht aller fehlgeschlagenen E-Mails aus dem PHPMailer-Log
 - **Cronjob Fehlerbericht**: Automatische Benachrichtigung bei E-Mail-Fehlern
 - **Cronjob Retry**: Automatisches erneutes Senden bei temporären Fehlern
 - **YForm-Validator**: E-Mail-Domain-Prüfung für Formulare
 - **YForm Mailer**: E-Mail-Versand beim Speichern (Tablemanager-kompatibel)
+
+---
+
+## 🩺 SMTP-Diagnose
+
+Die Diagnose-Seite bietet eine umfassende Prüfung der E-Mail-Konfiguration:
+
+### Funktionen
+
+- **Verbindungstest**: Prüft ob der SMTP-Server erreichbar ist
+- **Testmail-Versand**: Sendet eine echte Test-E-Mail mit detaillierter Fehleranalyse
+- **Automatische Checks**:
+  - Basis-Konfiguration (Host, Port, Verschlüsselung)
+  - DNS-Auflösung
+  - Port-Erreichbarkeit
+  - SSL/TLS-Zertifikat
+  - SMTP-Handshake
+  - Provider-spezifische Prüfungen (Microsoft 365, Gmail, etc.)
+
+### Verständliche Fehlermeldungen
+
+Bei Problemen erhalten Sie:
+- **Klartext-Erklärung**: Was bedeutet der Fehler?
+- **Lösungsvorschläge**: Konkrete Schritte zur Behebung
+- **Technische Details**: Für Entwickler ausklappbar
+
+### Erkannte Provider
+
+- Microsoft 365 / Outlook
+- Google Gmail / Workspace
+- IONOS / 1&1
+- Strato
+- Host Europe
+- All-Inkl
+- Apple iCloud
+- Eigene SMTP-Server
+
+---
+
+## 📊 Mail-Statistik
+
+Die Statistik-Seite zeigt eine Übersicht über alle versendeten E-Mails:
+
+- **Versandvolumen**: Heute, diese Woche, diesen Monat, gesamt
+- **Erfolgsquote**: Prozentsatz erfolgreich zugestellter E-Mails
+- **Versandzeiten-Heatmap**: Wann werden die meisten E-Mails versendet?
+- **Top Empfänger-Domains**: Häufigste Zieldomains
+- **Top Absender-Domains**: Häufigste Reply-To/From (ohne eigene Domain)
+- **Top Betreff-Muster**: Häufigste Betreff-Zeilen
 
 ---
 
@@ -483,4 +544,5 @@ MIT License
 
 ## Credits
 
-[Friends Of REDAXO](https://friendsofredaxo.github.io/)
+- [Friends Of REDAXO](https://friendsofredaxo.github.io/)
+- Sponsored by [Polarpixel - Peter Bickel](https://polarpixel.de)

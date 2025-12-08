@@ -1,34 +1,11 @@
 /**
  * Mail Tools - Statistics Styles
  * Mit Dark-Theme-Unterstützung via CSS-Variablen
+ * Pattern: Dark als Default, Light via prefers-color-scheme und rex-theme-light
  */
 
-/* === CSS Variables === */
+/* === CSS Variables - Dark Theme (Default) === */
 .mail-tools-stats {
-    /* Light Theme (Default) */
-    --mt-bg-card: #fff;
-    --mt-bg-box: #f8f9fa;
-    --mt-border: #ddd;
-    --mt-border-light: #eee;
-    --mt-text: #333;
-    --mt-text-muted: #666;
-    --mt-text-heading: #333;
-    --mt-accent: #3b5998;
-    --mt-accent-hover: #2d4373;
-    --mt-success: #5cb85c;
-    --mt-success-dark: #4cae4c;
-    --mt-heatmap-0: #eee;
-    --mt-heatmap-1: #c6e48b;
-    --mt-heatmap-2: #7bc96f;
-    --mt-heatmap-3: #449d44;
-    --mt-heatmap-4: #196127;
-    --mt-tooltip-bg: #333;
-    --mt-tooltip-text: #fff;
-}
-
-/* === Dark Theme === */
-body.rex-theme-dark .mail-tools-stats,
-[data-theme="dark"] .mail-tools-stats {
     --mt-bg-card: #2d3748;
     --mt-bg-box: #1a202c;
     --mt-border: #4a5568;
@@ -40,6 +17,7 @@ body.rex-theme-dark .mail-tools-stats,
     --mt-accent-hover: #4299e1;
     --mt-success: #48bb78;
     --mt-success-dark: #38a169;
+    --mt-danger: #fc8181;
     --mt-heatmap-0: #2d3748;
     --mt-heatmap-1: #276749;
     --mt-heatmap-2: #2f855a;
@@ -47,6 +25,77 @@ body.rex-theme-dark .mail-tools-stats,
     --mt-heatmap-4: #48bb78;
     --mt-tooltip-bg: #1a202c;
     --mt-tooltip-text: #e2e8f0;
+}
+
+/* === System Light Theme - Fallback wenn keine REDAXO Theme Class === */
+@media (prefers-color-scheme: light) {
+    body:not(.rex-theme-dark) .mail-tools-stats {
+        --mt-bg-card: #fff;
+        --mt-bg-box: #f8f9fa;
+        --mt-border: #ddd;
+        --mt-border-light: #eee;
+        --mt-text: #333;
+        --mt-text-muted: #666;
+        --mt-text-heading: #333;
+        --mt-accent: #3b5998;
+        --mt-accent-hover: #2d4373;
+        --mt-success: #5cb85c;
+        --mt-success-dark: #4cae4c;
+        --mt-danger: #d9534f;
+        --mt-heatmap-0: #eee;
+        --mt-heatmap-1: #c6e48b;
+        --mt-heatmap-2: #7bc96f;
+        --mt-heatmap-3: #449d44;
+        --mt-heatmap-4: #196127;
+        --mt-tooltip-bg: #333;
+        --mt-tooltip-text: #fff;
+    }
+}
+
+/* === REDAXO Light Theme - höchste Priorität === */
+body.rex-theme-light .mail-tools-stats {
+    --mt-bg-card: #fff !important;
+    --mt-bg-box: #f8f9fa !important;
+    --mt-border: #ddd !important;
+    --mt-border-light: #eee !important;
+    --mt-text: #333 !important;
+    --mt-text-muted: #666 !important;
+    --mt-text-heading: #333 !important;
+    --mt-accent: #3b5998 !important;
+    --mt-accent-hover: #2d4373 !important;
+    --mt-success: #5cb85c !important;
+    --mt-success-dark: #4cae4c !important;
+    --mt-danger: #d9534f !important;
+    --mt-heatmap-0: #eee !important;
+    --mt-heatmap-1: #c6e48b !important;
+    --mt-heatmap-2: #7bc96f !important;
+    --mt-heatmap-3: #449d44 !important;
+    --mt-heatmap-4: #196127 !important;
+    --mt-tooltip-bg: #333 !important;
+    --mt-tooltip-text: #fff !important;
+}
+
+/* === REDAXO Dark Theme - höchste Priorität === */
+body.rex-theme-dark .mail-tools-stats {
+    --mt-bg-card: #2d3748 !important;
+    --mt-bg-box: #1a202c !important;
+    --mt-border: #4a5568 !important;
+    --mt-border-light: #4a5568 !important;
+    --mt-text: #e2e8f0 !important;
+    --mt-text-muted: #a0aec0 !important;
+    --mt-text-heading: #e2e8f0 !important;
+    --mt-accent: #63b3ed !important;
+    --mt-accent-hover: #4299e1 !important;
+    --mt-success: #48bb78 !important;
+    --mt-success-dark: #38a169 !important;
+    --mt-danger: #fc8181 !important;
+    --mt-heatmap-0: #2d3748 !important;
+    --mt-heatmap-1: #276749 !important;
+    --mt-heatmap-2: #2f855a !important;
+    --mt-heatmap-3: #38a169 !important;
+    --mt-heatmap-4: #48bb78 !important;
+    --mt-tooltip-bg: #1a202c !important;
+    --mt-tooltip-text: #e2e8f0 !important;
 }
 
 /* === Layout === */
