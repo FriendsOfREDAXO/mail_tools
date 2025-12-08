@@ -314,12 +314,37 @@ class rex_yform_value_mailer extends rex_yform_value_abstract
     {
         $values = [];
 
-        // Aus value_pool
-        if (isset($this->params['value_pool']['email'])) {
-            $values = array_merge($values, $this->params['value_pool']['email']);
+        // Aus allen value_pool Quellen
+        if (isset($this->params['value_pool']) && is_array($this->params['value_pool'])) {
+            foreach ($this->params['value_pool'] as $pool) {
+                if (is_array($pool)) {
+                    $values = array_merge($values, $pool);
+                }
+            }
         }
-        if (isset($this->params['value_pool']['sql'])) {
-            $values = array_merge($values, $this->params['value_pool']['sql']);
+
+        // Direkt aus den Value-Objekten (für no_db Felder etc.)
+        if (isset($this->params['values']) && is_array($this->params['values'])) {
+            foreach ($this->params['values'] as $valueObj) {
+                if (is_object($valueObj) && method_exists($valueObj, 'getName') && method_exists($valueObj, 'getValue')) {
+                    $name = $valueObj->getName();
+                    // Nur hinzufügen wenn noch nicht vorhanden (value_pool hat Priorität)
+                    if ($name && !isset($values[$name])) {
+                        $values[$name] = $valueObj->getValue();
+                    }
+                }
+            }
+        }
+
+        // Fallback: POST-Daten für Felder die nirgends auftauchen
+        if (isset($this->params['this']->objparams['form_name'])) {
+            $formName = $this->params['this']->objparams['form_name'];
+            $post = rex_request($formName, 'array', []);
+            foreach ($post as $key => $value) {
+                if (!isset($values[$key]) && is_string($value)) {
+                    $values[$key] = $value;
+                }
+            }
         }
 
         // ID des Datensatzes hinzufügen

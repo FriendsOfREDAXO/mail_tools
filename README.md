@@ -209,6 +209,74 @@ upload|rechnung|Rechnung|
 mailer|bestaetigung_sent||bestellung_tpl|kunde_email||||rechnung|1
 ```
 
+### PHP-Schreibweise (YForm)
+
+Das Mailer Value kann auch in PHP verwendet werden:
+
+**Einfaches Beispiel:**
+```php
+$yform = new rex_yform();
+$yform->setObjectparams('form_action', rex_getUrl());
+
+$yform->setValueField('text', ['name', 'Name']);
+$yform->setValueField('text', ['email', 'E-Mail']);
+$yform->setValueField('textarea', ['message', 'Nachricht']);
+
+// Mailer Value - sendet E-Mail beim Speichern
+$yform->setValueField('mailer', [
+    'mail_sent',              // name - Feldname (speichert Versandzeitpunkt)
+    'E-Mail-Versand',         // label
+    'kontakt_template',       // template - YForm E-Mail-Template
+    'email',                  // to - Empfänger (hier: aus Feld "email")
+    '',                       // subject - leer wenn Template verwendet
+    '',                       // body - leer wenn Template verwendet
+    'email',                  // reply_to
+    '',                       // cc
+    '',                       // bcc
+    '',                       // attachments
+    0                         // send_mode: 0=immer, 1=nur neu, 2=nie
+]);
+
+echo $yform->getForm();
+```
+
+**Mit direktem Body (ohne Template):**
+```php
+$yform->setValueField('mailer', [
+    'notification_sent',
+    'Benachrichtigung',
+    '',                                           // kein Template
+    'admin@example.com',                          // feste E-Mail
+    'Neue Anfrage von {{name}}',                  // Betreff mit Platzhalter
+    '<h1>Neue Anfrage</h1><p>{{message}}</p>',   // HTML-Body
+    'email',                                      // reply_to aus Formularfeld
+    '',                                           // cc
+    'archiv@example.com',                         // bcc
+    '',                                           // attachments
+    0                                             // send_mode
+]);
+```
+
+**Mit Upload-Anhängen:**
+```php
+$yform->setValueField('upload', ['dokument', 'Dokument hochladen', '', '', 'pdf,doc,docx']);
+$yform->setValueField('upload', ['foto', 'Foto', '', '', 'jpg,png']);
+
+$yform->setValueField('mailer', [
+    'mail_sent',
+    'E-Mail',
+    'bewerbung_template',
+    'hr@firma.de',
+    '',
+    '',
+    'email',
+    '',
+    '',
+    'dokument,foto',    // Anhänge: Feldnamen kommagetrennt
+    1                   // nur bei Neuanlage
+]);
+```
+
 ### Platzhalter
 
 | Platzhalter | Beschreibung |
