@@ -4,6 +4,7 @@
 mail_tools_title = E-Mail Tools
 title = E-Mail Tools
 navigation_stats = Statistics
+navigation_diagnostics = Diagnostics
 navigation_log = Error Log
 navigation_test = Test
 navigation_help = Help
@@ -185,3 +186,133 @@ mail_tools_mailer_will_send = Email will be sent on save
 mail_tools_mailer_description = Sends email on save with full PHPMailer support
 mail_tools_mailer_smtp_config = SMTP Configuration
 mail_tools_mailer_smtp_config_notice = Optional: Custom SMTP credentials as JSON. Example: {"host":"smtp.example.com","port":587,"secure":"tls","auth":true,"username":"user","password":"secret"}
+
+# Diagnostics Page
+mail_tools_diag_title = SMTP Diagnostics
+mail_tools_diag_running = Running diagnostics...
+mail_tools_diag_testing = Testing connection...
+mail_tools_diag_detecting = Detecting settings...
+mail_tools_diag_auto_config = Automatic Configuration
+mail_tools_diag_auto_config_desc = Enter your email address to automatically detect the correct SMTP settings.
+mail_tools_diag_your_email = Your Email Address
+mail_tools_diag_detect_settings = Detect Settings
+mail_tools_diag_enter_email = Please enter an email address.
+mail_tools_diag_no_config_found = No automatic settings could be found for this email domain.
+mail_tools_diag_detected_config = Detected Configuration
+mail_tools_diag_enter_password = Enter password
+mail_tools_diag_provider_notes = Important Notes:
+mail_tools_diag_apply_config = Apply Configuration
+mail_tools_diag_no_password_confirm = You haven't entered a password. Apply configuration anyway?
+mail_tools_diag_config_applied = Configuration applied successfully! Page will reload.
+mail_tools_diag_config_failed = Error applying configuration.
+mail_tools_diag_run_again = Run Diagnostics Again
+mail_tools_diag_test_connection = Test Connection
+mail_tools_diag_open_config = PHPMailer Settings
+mail_tools_diag_show_debug = Show Debug Output
+mail_tools_diag_connection_successful = Connection established successfully!
+mail_tools_diag_connection_failed_detail = Connection failed: {0}
+mail_tools_diag_fix_applied = Setting changed! Page will reload.
+mail_tools_diag_apply_fix = Fix
+mail_tools_diag_status_ok = Everything OK
+mail_tools_diag_status_warning = Some warnings found
+mail_tools_diag_status_error = Problems found
+mail_tools_diag_detected_provider = Detected Provider
+mail_tools_diag_timestamp = Timestamp
+mail_tools_diag_recommendations = Recommendations
+
+# Diagnostic Checks
+mail_tools_diag_basic_config = Basic Configuration
+mail_tools_diag_mailer_type = Send Method
+mail_tools_diag_php_mail_hint = PHP mail() is often unreliable. SMTP is recommended for better deliverability.
+mail_tools_diag_smtp_host = SMTP Server
+mail_tools_diag_no_host = No SMTP host configured
+mail_tools_diag_port = Port
+mail_tools_diag_port_25_hint = Port 25 is blocked by many providers. Ports 587 or 465 are recommended.
+mail_tools_diag_port_465_needs_ssl = Port 465 requires SSL encryption.
+mail_tools_diag_port_587_needs_tls = Port 587 requires TLS/STARTTLS encryption.
+mail_tools_diag_encryption = Encryption
+mail_tools_diag_no_encryption = No encryption
+mail_tools_diag_no_encryption_hint = Emails are transmitted unencrypted. Sensitive data can be intercepted!
+mail_tools_diag_no_username = SMTP authentication is enabled but no username specified.
+mail_tools_diag_no_password = SMTP authentication is enabled but no password specified.
+mail_tools_diag_from = Sender
+mail_tools_diag_no_from = No sender address configured.
+mail_tools_diag_invalid_from = The sender address is invalid.
+
+# DNS Check
+mail_tools_diag_dns_check = DNS Check
+mail_tools_diag_host_not_resolved = The host "{0}" could not be resolved. Please check the spelling.
+
+# Connectivity
+mail_tools_diag_connectivity = Connection Check
+mail_tools_diag_port_reachable = Port {0} reachable
+mail_tools_diag_connection_time = {0} ms response time
+mail_tools_diag_slow_connection = The connection is slow. This may cause timeouts.
+mail_tools_diag_port_blocked = Port {0} is not reachable: {1}
+mail_tools_diag_alternative_ports = Reachable Ports
+mail_tools_diag_try_alternative_port = Try one of these ports instead.
+
+# SSL Check
+mail_tools_diag_ssl_check = SSL/TLS Certificate
+mail_tools_diag_starttls_will_upgrade = Connection will be encrypted after STARTTLS
+mail_tools_diag_cert_issuer = Certificate Issuer
+mail_tools_diag_cert_valid_until = Valid Until
+mail_tools_diag_days = days
+mail_tools_diag_cert_expired = The SSL certificate has expired!
+mail_tools_diag_cert_hostname = Hostname Verification
+mail_tools_diag_cert_match = Hostname matches
+mail_tools_diag_cert_mismatch = Certificate is issued for different host (expected: {0})
+mail_tools_diag_ssl_failed = SSL connection failed: {0}
+
+# SMTP Handshake
+mail_tools_diag_smtp_handshake = SMTP Connection
+mail_tools_diag_connection_failed = Could not establish connection to server.
+mail_tools_diag_server_banner = Server Banner
+mail_tools_diag_unexpected_banner = Unexpected server response: {0}
+mail_tools_diag_capabilities = Features
+mail_tools_diag_supported = Supported
+mail_tools_diag_starttls_not_supported = STARTTLS is not supported by server, but TLS is configured.
+mail_tools_diag_auth_not_advertised = Server did not advertise authentication.
+
+# Authentication
+mail_tools_diag_auth_check = Authentication
+mail_tools_diag_username_format = Username Format
+mail_tools_diag_email_format = Email Format
+mail_tools_diag_custom_format = Custom
+mail_tools_diag_check_username_hint = Check if username is correct (often it's the full email address).
+mail_tools_diag_password = Password
+mail_tools_diag_password_short = Password is short (less than 8 characters)
+mail_tools_diag_looks_like_app_password = Looks like app password
+mail_tools_diag_password_set = Password is set
+mail_tools_diag_auth_type = Authentication Type
+mail_tools_diag_app_password_required = App password recommended
+mail_tools_diag_mfa_hint = With 2-factor authentication enabled, you need a special app password.
+mail_tools_diag_sender_mismatch = Sender ≠ Username
+mail_tools_diag_different_domains = Different domains
+mail_tools_diag_sender_mismatch_hint = Some providers only allow sending with the authenticated email address.
+
+# Provider Check
+mail_tools_diag_provider_check = {0}-specific Check
+mail_tools_diag_provider_note = Note
+mail_tools_diag_wrong_port = Port {0} is used, but {1} is recommended for this provider.
+mail_tools_diag_wrong_security = Encryption "{0}" is used, but "{1}" is recommended.
+mail_tools_diag_m365_sender_must_match = With Microsoft 365, the sender must match the authenticated account.
+mail_tools_diag_gmail_app_password = Google App Password
+mail_tools_diag_password_length_unusual = Password length unusual
+mail_tools_diag_gmail_app_password_hint = Google app passwords are 16 characters (without spaces).
+
+# Recommendations
+mail_tools_diag_rec_change_port = Change Port
+mail_tools_diag_rec_port_blocked = The configured port is blocked. Port {0} is reachable.
+mail_tools_diag_rec_correct_port = Correct Port
+mail_tools_diag_rec_provider_port = {0} uses port {1} by default.
+mail_tools_diag_rec_correct_security = Correct Encryption
+mail_tools_diag_rec_provider_security = {0} uses {1} encryption.
+mail_tools_diag_rec_use_smtp = Switch to SMTP
+mail_tools_diag_rec_smtp_benefits = SMTP provides better deliverability, error handling, and authentication.
+mail_tools_diag_rec_enable_encryption = Enable Encryption
+mail_tools_diag_rec_encryption_important = Emails are transmitted unencrypted. Enable TLS or SSL for secure transmission.
+mail_tools_diag_auto_detected = Automatically detected - please verify credentials
+mail_tools_diag_current_config = Current Configuration
+mail_tools_diag_host_already_configured = The currently configured SMTP server is reachable and working.
+mail_tools_diag_current_host_valid = Current host "{0}" is valid

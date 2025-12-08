@@ -15,6 +15,9 @@ pages:
                 title: 'translate:navigation_stats'
                 icon: rex-icon fa-bar-chart
                 isDefault: true
+            diagnostics:
+                title: 'translate:navigation_diagnostics'
+                icon: rex-icon fa-stethoscope
             log:
                 title: 'translate:navigation_log'
                 icon: rex-icon fa-exclamation-triangle
