@@ -60,8 +60,14 @@ $hasA = DomainValidator::isDomainValid('example.com');
 
 In YForm-Formularen kann der `email_domain` Validator verwendet werden:
 
+**Pipe-Format:**
 ```
 validate|email_domain|feldname|Fehlermeldung|0
+```
+
+**PHP-Schreibweise:**
+```php
+$yform->setValidateField('email_domain', ['email', 'Diese E-Mail-Domain existiert nicht', 0]);
 ```
 
 **Parameter:**
@@ -74,6 +80,18 @@ validate|email_domain|feldname|Fehlermeldung|0
 text|email|E-Mail|
 validate|email|email|Bitte gültige E-Mail eingeben
 validate|email_domain|email|Diese E-Mail-Domain existiert nicht|0
+```
+
+**Beispiel in PHP:**
+```php
+$yform = new rex_yform();
+$yform->setObjectparams('form_action', rex_getUrl());
+
+$yform->setValueField('text', ['email', 'E-Mail']);
+$yform->setValidateField('email', ['email', 'Bitte gültige E-Mail eingeben']);
+$yform->setValidateField('email_domain', ['email', 'Diese E-Mail-Domain existiert nicht', 0]);
+
+echo $yform->getForm();
 ```
 
 ---
