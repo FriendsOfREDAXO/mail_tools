@@ -368,3 +368,32 @@ mail_tools_diag_help_sender_match = The sender address often must match the auth
 mail_tools_diag_help_increase_timeout = Consider increasing the timeout value in settings
 mail_tools_diag_help_check_settings = Check all settings in the PHPMailer configuration
 mail_tools_diag_help_contact_provider = Contact your email provider for the correct settings
+mail_tools_diag_help_try_tls = Try TLS encryption (port 587) - this is today's standard
+
+# Sender Reputation (SPF/DKIM/DMARC)
+mail_tools_diag_reputation_check = Sender Reputation
+mail_tools_diag_spf_not_found = No SPF record found
+mail_tools_diag_spf_hint = An SPF record defines which servers are allowed to send emails for your domain.
+mail_tools_diag_spf_too_open = SPF too permissive (+all)
+mail_tools_diag_spf_too_open_hint = "+all" allows any server to send emails. Use "-all" or "~all" instead.
+mail_tools_diag_spf_ok = SPF correctly configured
+mail_tools_diag_spf_found = SPF record present
+mail_tools_diag_dkim_found = DKIM signature found (Selector: {0})
+mail_tools_diag_dkim_not_found = No DKIM record found
+mail_tools_diag_dkim_hint = DKIM cryptographically signs emails. Contact your hosting provider for setup.
+mail_tools_diag_dmarc_not_found = No DMARC record found
+mail_tools_diag_dmarc_hint = DMARC defines what to do with unauthenticated emails.
+mail_tools_diag_dmarc_reject = DMARC: Strict policy (reject)
+mail_tools_diag_dmarc_quarantine = DMARC: Medium policy (quarantine)
+mail_tools_diag_dmarc_none = DMARC: No policy (none)
+mail_tools_diag_dmarc_none_hint = "p=none" only monitors. Increase to "quarantine" or "reject" for better protection.
+mail_tools_diag_dmarc_found = DMARC record present
+mail_tools_diag_dmarc_policy_strong = Maximum protection: Unauthenticated emails are rejected.
+
+# Blacklist Check
+mail_tools_diag_blacklist_check = Blacklist Check
+mail_tools_diag_server_ip = Server IP
+mail_tools_diag_blacklist_status = Blacklist Status
+mail_tools_diag_not_listed = Not listed ({0} blacklists checked)
+mail_tools_diag_listed_on = Listed on: {0}
+mail_tools_diag_blacklist_hint = A blacklist listing can significantly impact deliverability. Contact the blacklist operators for removal.

@@ -215,6 +215,12 @@ class SmtpDiagnostics
         // 8. Provider-spezifische Checks
         $this->runProviderSpecificChecks();
         
+        // 9. Absender-Reputation (SPF/DKIM/DMARC)
+        $this->checkSenderReputation();
+        
+        // 10. Blacklist-Check
+        $this->checkBlacklists();
+        
         // Gesamtstatus berechnen
         $this->calculateOverallStatus();
         
@@ -943,6 +949,291 @@ class SmtpDiagnostics
         if (!empty($check['details']) || !empty($check['issues'])) {
             $this->results['checks']['provider_specific'] = $check;
         }
+    }
+
+    /**
+     * Prüft SPF, DKIM und DMARC Records der Absender-Domain
+     */
+    private function checkSenderReputation(): void
+    {
+        if (empty($this->config['from'])) {
+            return;
+        }
+
+        $fromDomain = strtolower(substr(strrchr($this->config['from'], '@'), 1));
+        if (empty($fromDomain)) {
+            return;
+        }
+
+        $check = [
+            'name' => 'sender_reputation',
+            'title' => rex_i18n::msg('mail_tools_diag_reputation_check'),
+            'status' => 'ok',
+            'details' => [],
+            'issues' => [],
+        ];
+
+        // SPF-Check
+        $spfResult = $this->checkSpfRecord($fromDomain);
+        $check['details'][] = [
+            'label' => 'SPF (Sender Policy Framework)',
+            'value' => $spfResult['value'],
+            'status' => $spfResult['status'],
+            'hint' => $spfResult['hint'] ?? '',
+        ];
+        if ($spfResult['status'] === 'error') {
+            $check['status'] = 'warning';
+        }
+
+        // DKIM-Check (wir können nur prüfen ob ein Selector existiert)
+        $dkimResult = $this->checkDkimRecord($fromDomain);
+        $check['details'][] = [
+            'label' => 'DKIM (DomainKeys)',
+            'value' => $dkimResult['value'],
+            'status' => $dkimResult['status'],
+            'hint' => $dkimResult['hint'] ?? '',
+        ];
+
+        // DMARC-Check
+        $dmarcResult = $this->checkDmarcRecord($fromDomain);
+        $check['details'][] = [
+            'label' => 'DMARC (Domain Authentication)',
+            'value' => $dmarcResult['value'],
+            'status' => $dmarcResult['status'],
+            'hint' => $dmarcResult['hint'] ?? '',
+        ];
+        if ($dmarcResult['status'] === 'error') {
+            $check['status'] = 'warning';
+        }
+
+        $this->results['checks']['sender_reputation'] = $check;
+    }
+
+    /**
+     * Prüft SPF-Record
+     * @return array{status: string, value: string, hint?: string}
+     */
+    private function checkSpfRecord(string $domain): array
+    {
+        $records = @dns_get_record($domain, DNS_TXT);
+        
+        if ($records === false || empty($records)) {
+            return [
+                'status' => 'error',
+                'value' => rex_i18n::msg('mail_tools_diag_spf_not_found'),
+                'hint' => rex_i18n::msg('mail_tools_diag_spf_hint'),
+            ];
+        }
+
+        foreach ($records as $record) {
+            if (isset($record['txt']) && str_starts_with(strtolower($record['txt']), 'v=spf1')) {
+                $spf = $record['txt'];
+                
+                // Prüfen auf zu lockere Konfiguration
+                if (str_contains($spf, '+all')) {
+                    return [
+                        'status' => 'warning',
+                        'value' => rex_i18n::msg('mail_tools_diag_spf_too_open'),
+                        'hint' => rex_i18n::msg('mail_tools_diag_spf_too_open_hint'),
+                    ];
+                }
+                
+                // Prüfen ob -all oder ~all am Ende
+                if (str_contains($spf, '-all') || str_contains($spf, '~all')) {
+                    return [
+                        'status' => 'ok',
+                        'value' => rex_i18n::msg('mail_tools_diag_spf_ok'),
+                        'hint' => $this->truncateSpf($spf),
+                    ];
+                }
+                
+                return [
+                    'status' => 'info',
+                    'value' => rex_i18n::msg('mail_tools_diag_spf_found'),
+                    'hint' => $this->truncateSpf($spf),
+                ];
+            }
+        }
+
+        return [
+            'status' => 'error',
+            'value' => rex_i18n::msg('mail_tools_diag_spf_not_found'),
+            'hint' => rex_i18n::msg('mail_tools_diag_spf_hint'),
+        ];
+    }
+
+    /**
+     * Kürzt SPF-Record für Anzeige
+     */
+    private function truncateSpf(string $spf): string
+    {
+        if (strlen($spf) > 80) {
+            return substr($spf, 0, 77) . '...';
+        }
+        return $spf;
+    }
+
+    /**
+     * Prüft DKIM-Record (nur grundlegende Prüfung)
+     * @return array{status: string, value: string, hint?: string}
+     */
+    private function checkDkimRecord(string $domain): array
+    {
+        // Bekannte DKIM-Selektoren prüfen
+        $selectors = ['default', 'dkim', 'mail', 'selector1', 'selector2', 'google', 's1', 's2', 'k1'];
+        
+        foreach ($selectors as $selector) {
+            $dkimDomain = $selector . '._domainkey.' . $domain;
+            $records = @dns_get_record($dkimDomain, DNS_TXT);
+            
+            if ($records !== false && !empty($records)) {
+                foreach ($records as $record) {
+                    if (isset($record['txt']) && str_contains($record['txt'], 'v=DKIM1')) {
+                        return [
+                            'status' => 'ok',
+                            'value' => rex_i18n::msg('mail_tools_diag_dkim_found', $selector),
+                        ];
+                    }
+                }
+            }
+        }
+
+        return [
+            'status' => 'info',
+            'value' => rex_i18n::msg('mail_tools_diag_dkim_not_found'),
+            'hint' => rex_i18n::msg('mail_tools_diag_dkim_hint'),
+        ];
+    }
+
+    /**
+     * Prüft DMARC-Record
+     * @return array{status: string, value: string, hint?: string}
+     */
+    private function checkDmarcRecord(string $domain): array
+    {
+        $dmarcDomain = '_dmarc.' . $domain;
+        $records = @dns_get_record($dmarcDomain, DNS_TXT);
+        
+        if ($records === false || empty($records)) {
+            return [
+                'status' => 'error',
+                'value' => rex_i18n::msg('mail_tools_diag_dmarc_not_found'),
+                'hint' => rex_i18n::msg('mail_tools_diag_dmarc_hint'),
+            ];
+        }
+
+        foreach ($records as $record) {
+            if (isset($record['txt']) && str_starts_with($record['txt'], 'v=DMARC1')) {
+                $dmarc = $record['txt'];
+                
+                // Policy extrahieren
+                if (preg_match('/p=(\w+)/', $dmarc, $matches)) {
+                    $policy = $matches[1];
+                    
+                    if ($policy === 'reject') {
+                        return [
+                            'status' => 'ok',
+                            'value' => rex_i18n::msg('mail_tools_diag_dmarc_reject'),
+                            'hint' => rex_i18n::msg('mail_tools_diag_dmarc_policy_strong'),
+                        ];
+                    } elseif ($policy === 'quarantine') {
+                        return [
+                            'status' => 'ok',
+                            'value' => rex_i18n::msg('mail_tools_diag_dmarc_quarantine'),
+                        ];
+                    } else {
+                        return [
+                            'status' => 'warning',
+                            'value' => rex_i18n::msg('mail_tools_diag_dmarc_none'),
+                            'hint' => rex_i18n::msg('mail_tools_diag_dmarc_none_hint'),
+                        ];
+                    }
+                }
+                
+                return [
+                    'status' => 'info',
+                    'value' => rex_i18n::msg('mail_tools_diag_dmarc_found'),
+                ];
+            }
+        }
+
+        return [
+            'status' => 'error',
+            'value' => rex_i18n::msg('mail_tools_diag_dmarc_not_found'),
+            'hint' => rex_i18n::msg('mail_tools_diag_dmarc_hint'),
+        ];
+    }
+
+    /**
+     * Prüft ob die Server-IP auf Blacklists steht
+     */
+    private function checkBlacklists(): void
+    {
+        if (empty($this->config['host']) || $this->config['mailer'] !== 'smtp') {
+            return;
+        }
+
+        $check = [
+            'name' => 'blacklist_check',
+            'title' => rex_i18n::msg('mail_tools_diag_blacklist_check'),
+            'status' => 'ok',
+            'details' => [],
+            'issues' => [],
+        ];
+
+        // IP des SMTP-Servers ermitteln
+        $ip = gethostbyname($this->config['host']);
+        if ($ip === $this->config['host']) {
+            // Konnte nicht aufgelöst werden
+            return;
+        }
+
+        // Bekannte Blacklists prüfen (nur die wichtigsten, um DNS-Anfragen zu begrenzen)
+        $blacklists = [
+            'zen.spamhaus.org' => 'Spamhaus',
+            'bl.spamcop.net' => 'SpamCop',
+            'b.barracudacentral.org' => 'Barracuda',
+            'dnsbl.sorbs.net' => 'SORBS',
+        ];
+
+        $reversedIp = implode('.', array_reverse(explode('.', $ip)));
+        $listedOn = [];
+        $checkedCount = 0;
+
+        foreach ($blacklists as $blacklist => $name) {
+            $lookup = $reversedIp . '.' . $blacklist;
+            $result = @gethostbyname($lookup);
+            
+            // Wenn die Antwort eine IP zurückgibt (nicht den Lookup-String), ist die IP gelistet
+            if ($result !== $lookup && str_starts_with($result, '127.')) {
+                $listedOn[] = $name;
+            }
+            $checkedCount++;
+        }
+
+        $check['details'][] = [
+            'label' => rex_i18n::msg('mail_tools_diag_server_ip'),
+            'value' => $ip,
+            'status' => 'info',
+        ];
+
+        if (empty($listedOn)) {
+            $check['details'][] = [
+                'label' => rex_i18n::msg('mail_tools_diag_blacklist_status'),
+                'value' => rex_i18n::msg('mail_tools_diag_not_listed', $checkedCount),
+                'status' => 'ok',
+            ];
+        } else {
+            $check['status'] = 'warning';
+            $check['details'][] = [
+                'label' => rex_i18n::msg('mail_tools_diag_blacklist_status'),
+                'value' => rex_i18n::msg('mail_tools_diag_listed_on', implode(', ', $listedOn)),
+                'status' => 'error',
+                'hint' => rex_i18n::msg('mail_tools_diag_blacklist_hint'),
+            ];
+        }
+
+        $this->results['checks']['blacklist_check'] = $check;
     }
 
     /**

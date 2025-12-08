@@ -369,3 +369,32 @@ mail_tools_diag_help_sender_match = Die Absender-Adresse muss oft mit dem angeme
 mail_tools_diag_help_increase_timeout = Erhöhen Sie ggf. den Timeout-Wert in den Einstellungen
 mail_tools_diag_help_check_settings = Prüfen Sie alle Einstellungen in der PHPMailer-Konfiguration
 mail_tools_diag_help_contact_provider = Wenden Sie sich an Ihren E-Mail-Provider für die korrekten Einstellungen
+mail_tools_diag_help_try_tls = Versuchen Sie TLS-Verschlüsselung (Port 587) - dies ist der heutige Standard
+
+# Absender-Reputation (SPF/DKIM/DMARC)
+mail_tools_diag_reputation_check = Absender-Reputation
+mail_tools_diag_spf_not_found = Kein SPF-Record gefunden
+mail_tools_diag_spf_hint = Ein SPF-Record definiert, welche Server E-Mails für Ihre Domain senden dürfen.
+mail_tools_diag_spf_too_open = SPF zu offen (+all)
+mail_tools_diag_spf_too_open_hint = "+all" erlaubt jedem Server E-Mails zu senden. Verwenden Sie "-all" oder "~all".
+mail_tools_diag_spf_ok = SPF korrekt konfiguriert
+mail_tools_diag_spf_found = SPF-Record vorhanden
+mail_tools_diag_dkim_found = DKIM-Signatur gefunden (Selector: {0})
+mail_tools_diag_dkim_not_found = Kein DKIM-Record gefunden
+mail_tools_diag_dkim_hint = DKIM signiert E-Mails kryptografisch. Kontaktieren Sie Ihren Hosting-Provider zur Einrichtung.
+mail_tools_diag_dmarc_not_found = Kein DMARC-Record gefunden
+mail_tools_diag_dmarc_hint = DMARC definiert, was mit nicht authentifizierten E-Mails geschehen soll.
+mail_tools_diag_dmarc_reject = DMARC: Strenge Richtlinie (reject)
+mail_tools_diag_dmarc_quarantine = DMARC: Mittlere Richtlinie (quarantine)
+mail_tools_diag_dmarc_none = DMARC: Keine Richtlinie (none)
+mail_tools_diag_dmarc_none_hint = "p=none" überwacht nur. Erhöhen Sie zu "quarantine" oder "reject" für besseren Schutz.
+mail_tools_diag_dmarc_found = DMARC-Record vorhanden
+mail_tools_diag_dmarc_policy_strong = Maximaler Schutz: Nicht authentifizierte E-Mails werden abgelehnt.
+
+# Blacklist-Check
+mail_tools_diag_blacklist_check = Blacklist-Prüfung
+mail_tools_diag_server_ip = Server-IP
+mail_tools_diag_blacklist_status = Blacklist-Status
+mail_tools_diag_not_listed = Nicht gelistet ({0} Blacklists geprüft)
+mail_tools_diag_listed_on = Gelistet auf: {0}
+mail_tools_diag_blacklist_hint = Eine Blacklist-Listung kann die Zustellbarkeit erheblich beeinträchtigen. Kontaktieren Sie die Blacklist-Betreiber zur Entfernung.
