@@ -133,6 +133,44 @@ Die Statistik-Seite zeigt eine Übersicht über alle versendeten E-Mails:
 
 ---
 
+## ⏰ Cronjobs
+
+### E-Mail Fehlerbericht
+
+Sendet automatisch Berichte über fehlgeschlagene E-Mails per E-Mail.
+
+**Einrichtung:**
+1. Gehe zu **AddOns → Cronjob**
+2. Erstelle einen neuen Cronjob vom Typ **"E-Mail Fehlerbericht"**
+3. Konfiguriere:
+   - **Empfänger**: E-Mail-Adresse(n) für den Bericht (kommagetrennt)
+   - **Nur bei Fehlern senden**: Bericht nur wenn neue Fehler vorhanden
+   - **EML-Anhänge**: Archivierte E-Mails als Anhang mitsenden
+   - **Filter Betreff**: Nur E-Mails mit bestimmtem Betreff melden
+   - **Filter Empfänger**: Nur E-Mails an bestimmte Empfänger melden
+4. Zeitplan festlegen (z.B. täglich)
+5. Cronjob aktivieren
+
+### E-Mail Retry
+
+Versendet E-Mails mit temporären Fehlern automatisch erneut.
+
+**Temporäre Fehler** (Retry sinnvoll):
+- Timeout, Verbindungsabbruch
+- Greylisting
+- Server überlastet (4xx Codes)
+
+**Permanente Fehler** (kein Retry):
+- Empfänger existiert nicht
+- Domain nicht gefunden
+- Spam-Blocking
+
+**Konfiguration:**
+- Maximal 3 Retry-Versuche pro E-Mail
+- Wartezeiten: 1h, 6h, 24h
+
+---
+
 ## 🔍 E-Mail Domain-Validator
 
 Prüft, ob eine E-Mail-Adresse zu einer existierenden Domain gehört, die E-Mails empfangen kann.
