@@ -430,25 +430,6 @@ $content .= '
 </div>
 ';
 
-// Externe Diagnose-Links
-$content .= '
-<div class="mail-tools-diag-external">
-    <h4><i class="fa fa-external-link"></i> ' . rex_i18n::msg('mail_tools_diag_external_tools') . '</h4>
-    <p class="text-muted">' . rex_i18n::msg('mail_tools_diag_external_desc') . '</p>
-    <div class="mail-tools-diag-links">
-        <a href="https://mxtoolbox.com/SuperTool.aspx" target="_blank" rel="noopener" class="btn btn-default">
-            <i class="fa fa-wrench"></i> MXToolbox SuperTool
-        </a>
-        <a href="https://klxm.de/check" target="_blank" rel="noopener" class="btn btn-default">
-            <i class="fa fa-envelope-open"></i> KLXM E-Mail Check
-        </a>
-        <a href="https://www.mail-tester.com/" target="_blank" rel="noopener" class="btn btn-default">
-            <i class="fa fa-star"></i> Mail-Tester
-        </a>
-    </div>
-</div>
-';
-
 // Ergebnis-Container
 $content .= '<div id="mail-tools-diag-results"></div>';
 
