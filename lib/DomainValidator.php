@@ -50,6 +50,13 @@ class DomainValidator
             return $result;
         }
 
+        // 2a. TLD-Blocklist prüfen
+        $blockedTld = self::isBlockedTld($domain);
+        if ('' !== $blockedTld) {
+            $result['message'] = 'Blockierte Domainendung: .' . $blockedTld;
+            return $result;
+        }
+
         // 3. Domain/DNS prüfen (A oder AAAA Record)
         if (!self::checkDomain($domain)) {
             $result['message'] = 'Domain existiert nicht: ' . $domain;
@@ -140,6 +147,45 @@ class DomainValidator
     private static function checkMx(string $domain): bool
     {
         return checkdnsrr($domain, 'MX');
+    }
+
+    /**
+     * Prüft ob die TLD der Domain auf der Blockliste steht.
+     *
+     * @param string $domain Die zu prüfende Domain
+     * @return string Die blockierte TLD oder leerer String wenn nicht blockiert
+     */
+    public static function isBlockedTld(string $domain): string
+    {
+        $addon = \rex_addon::get('mail_tools');
+        $blockedTlds = $addon->getConfig('blocked_tlds', '');
+
+        if ('' === $blockedTlds) {
+            return '';
+        }
+
+        // TLDs parsen: Kommagetrennt, Punkte entfernen, lowercase
+        $tldList = array_map(static function (string $tld): string {
+            return strtolower(trim(ltrim($tld, '.')));
+        }, explode(',', $blockedTlds));
+        $tldList = array_filter($tldList);
+
+        if ([] === $tldList) {
+            return '';
+        }
+
+        // TLD aus Domain extrahieren
+        $lastDot = strrpos($domain, '.');
+        if (false === $lastDot) {
+            return '';
+        }
+        $domainTld = strtolower(substr($domain, $lastDot + 1));
+
+        if (in_array($domainTld, $tldList, true)) {
+            return $domainTld;
+        }
+
+        return '';
     }
 
     /**

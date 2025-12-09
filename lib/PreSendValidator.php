@@ -48,6 +48,9 @@ class PreSendValidator
 
         $invalidRecipients = [];
 
+        // Blockierte TLDs laden
+        $blockedTlds = self::getBlockedTlds();
+
         foreach ($allRecipients as $recipient) {
             $email = $recipient['email'];
             $domain = DomainValidator::extractDomain($email);
@@ -57,6 +60,18 @@ class PreSendValidator
                     'email' => $email,
                     'reason' => 'invalid_format',
                     'message' => 'Invalid email format',
+                ];
+                continue;
+            }
+
+            // TLD-Prüfung
+            $tld = self::extractTld($domain);
+            if (in_array($tld, $blockedTlds, true)) {
+                $invalidRecipients[] = [
+                    'email' => $email,
+                    'domain' => $domain,
+                    'reason' => 'blocked_tld',
+                    'message' => 'Blocked TLD: .' . $tld,
                 ];
                 continue;
             }
@@ -77,6 +92,37 @@ class PreSendValidator
             self::logInvalidRecipients($mailer, $invalidRecipients);
             self::abortSend($mailer, $invalidRecipients);
         }
+    }
+
+    /**
+     * Extrahiert die TLD aus einer Domain.
+     */
+    private static function extractTld(string $domain): string
+    {
+        $parts = explode('.', strtolower($domain));
+        return end($parts) ?: '';
+    }
+
+    /**
+     * Gibt die Liste der blockierten TLDs zurück.
+     *
+     * @return array<string>
+     */
+    private static function getBlockedTlds(): array
+    {
+        $addon = rex_addon::get('mail_tools');
+        $blockedTldsString = $addon->getConfig('blocked_tlds', '');
+        
+        if ('' === $blockedTldsString) {
+            return [];
+        }
+        
+        // Komma- oder zeilengetrennt, mit oder ohne Punkt
+        $tlds = preg_split('/[\s,]+/', $blockedTldsString, -1, PREG_SPLIT_NO_EMPTY);
+        
+        return array_map(static function ($tld) {
+            return ltrim(strtolower(trim($tld)), '.');
+        }, $tlds ?: []);
     }
 
     /**

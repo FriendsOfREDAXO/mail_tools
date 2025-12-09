@@ -13,6 +13,7 @@ $details = [];
 if ($testEmail !== '' && rex_post('test_submit', 'bool', false)) {
     $validationResult = DomainValidator::validate($testEmail);
     $domain = DomainValidator::extractDomain($testEmail);
+    $blockedTld = DomainValidator::isBlockedTld($domain);
 
     $details = [
         'email' => $testEmail,
@@ -20,6 +21,7 @@ if ($testEmail !== '' && rex_post('test_submit', 'bool', false)) {
         'syntax_valid' => $validationResult['syntax'],
         'has_mx' => $validationResult['mx'],
         'has_a' => $validationResult['domain'],
+        'blocked_tld' => $blockedTld,
         'result' => $requireMx ? ($validationResult['valid'] && $validationResult['mx']) : $validationResult['valid'],
         'error' => $validationResult['valid'] ? null : $validationResult['message'],
     ];
@@ -93,6 +95,10 @@ if ($validationResult !== null) {
             <tr>
                 <th>' . $addon->i18n('test_detail_a') . '</th>
                 <td>' . ($details['has_a'] ? '<span class="text-success">✅ ' . $addon->i18n('test_yes') . '</span>' : '<span class="text-danger">❌ ' . $addon->i18n('test_no') . '</span>') . '</td>
+            </tr>
+            <tr>
+                <th>' . $addon->i18n('test_detail_tld_blocked') . '</th>
+                <td>' . ('' !== $details['blocked_tld'] ? '<span class="text-danger">❌ .' . rex_escape($details['blocked_tld']) . '</span>' : '<span class="text-success">✅ ' . $addon->i18n('test_no') . '</span>') . '</td>
             </tr>
         </tbody>
     </table>';
@@ -405,6 +411,16 @@ if (rex_post('presend_test', 'bool', false) && $preSendTestEmail !== '') {
             'message' => $typoSuggestion 
                 ? $addon->i18n('test_presend_typo_warning', $typoSuggestion)
                 : $addon->i18n('test_presend_typo_ok'),
+        ];
+
+        // 6. TLD-Blocklist prüfen
+        $blockedTld = DomainValidator::isBlockedTld($domain);
+        $preSendResult['tld'] = [
+            'check' => $addon->i18n('test_presend_tld'),
+            'status' => '' !== $blockedTld ? 'error' : 'ok',
+            'message' => '' !== $blockedTld
+                ? $addon->i18n('test_presend_tld_blocked', '.' . $blockedTld)
+                : $addon->i18n('test_presend_tld_ok'),
         ];
     } else {
         $preSendResult['domain'] = [

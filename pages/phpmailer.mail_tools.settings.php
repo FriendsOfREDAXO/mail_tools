@@ -11,7 +11,8 @@ $addon = rex_addon::get('mail_tools');
 // Formular verarbeiten
 if (rex_post('save_settings', 'bool', false)) {
     $addon->setConfig('validate_domains', rex_post('validate_domains', 'bool', false));
-    $addon->setConfig('invalid_domain_action', rex_post('invalid_domain_action', 'string', 'block_all'));
+    $addon->setConfig('invalid_domain_action', rex_post('invalid_domain_action', 'string', 'block_invalid'));
+    $addon->setConfig('blocked_tlds', rex_post('blocked_tlds', 'string', ''));
     $addon->setConfig('check_mx', rex_post('check_mx', 'bool', false));
     $addon->setConfig('check_disposable', rex_post('check_disposable', 'bool', false));
     $addon->setConfig('check_typos', rex_post('check_typos', 'bool', false));
@@ -21,7 +22,8 @@ if (rex_post('save_settings', 'bool', false)) {
 
 // Aktuelle Werte
 $validateDomains = $addon->getConfig('validate_domains', true);
-$invalidAction = $addon->getConfig('invalid_domain_action', 'block_all');
+$invalidAction = $addon->getConfig('invalid_domain_action', 'block_invalid');
+$blockedTlds = $addon->getConfig('blocked_tlds', '');
 $checkMx = $addon->getConfig('check_mx', false);
 $checkDisposable = $addon->getConfig('check_disposable', false);
 $checkTypos = $addon->getConfig('check_typos', false);
@@ -56,6 +58,13 @@ $content = '
     <fieldset>
         <legend>' . $addon->i18n('settings_additional_checks') . '</legend>
         
+        <div class="form-group">
+            <label for="blocked_tlds">' . $addon->i18n('settings_blocked_tlds_label') . '</label>
+            <textarea class="form-control" id="blocked_tlds" name="blocked_tlds" rows="3" 
+                      placeholder=".ru, .cn, .xyz">' . rex_escape($blockedTlds) . '</textarea>
+            <p class="help-block">' . $addon->i18n('settings_blocked_tlds_notice') . '</p>
+        </div>
+
         <div class="form-group">
             <div class="checkbox">
                 <label>

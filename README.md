@@ -40,6 +40,7 @@ Der Pre-Send Validator prüft **vor jedem E-Mail-Versand** ob die Empfänger-Dom
 - **MX-Record-Prüfung**: Optional - Prüft ob die Domain einen Mail-Server hat
 - **Wegwerf-E-Mail-Erkennung**: Blockiert bekannte Wegwerf-Dienste (tempmail, guerrillamail, etc.)
 - **Tippfehler-Erkennung**: Erkennt häufige Tippfehler (gmial.com → gmail.com)
+- **TLD-Blocklist**: Blockiert E-Mails an bestimmte Domainendungen (z.B. .ru, .cn, .xyz)
 
 ### Konfiguration
 
@@ -50,6 +51,7 @@ Unter **Einstellungen** können Sie festlegen:
 | **Versand blockieren** | E-Mail wird nicht versendet, Fehler wird geloggt |
 | **Nur ungültige entfernen** | Gültige Empfänger erhalten die E-Mail, ungültige werden entfernt |
 | **Nur loggen** | E-Mail wird versendet, Fehler wird nur protokolliert |
+| **Blockierte TLDs** | Kommagetrennte Liste von TLDs die blockiert werden sollen |
 
 ### Testseite
 
@@ -59,6 +61,7 @@ Auf der **Test**-Seite können Sie E-Mail-Adressen prüfen bevor sie verwendet w
 - MX-Record vorhanden
 - Wegwerf-E-Mail-Erkennung
 - Tippfehler-Erkennung
+- TLD-Blocklist-Prüfung
 
 ---
 
