@@ -33,6 +33,9 @@ settings_check_typos_label = Tippfehler-Erkennung
 settings_check_typos_notice = Erkennt häufige Tippfehler wie gmial.com statt gmail.com.
 settings_blocked_tlds_label = Blockierte TLDs (Domainendungen)
 settings_blocked_tlds_notice = Kommagetrennte Liste von TLDs die blockiert werden sollen (z.B. ru, cn, xyz). Ohne Punkt eingeben.
+settings_cronjob_title = Cronjob / Fehlerberichte
+settings_report_recipients_label = Empfänger für Fehlerberichte
+settings_report_recipients_notice = Kommagetrennte Liste von E-Mail-Adressen, die bei E-Mail-Fehlern benachrichtigt werden sollen.
 settings_save = Speichern
 settings_status_title = Aktueller Status
 settings_status_validation = Domain-Validierung
@@ -86,6 +89,8 @@ config_filter_recipient_notice = Nur E-Mails melden, deren Empfänger diesen Tex
 
 # Cronjob
 cronjob_name = E-Mail Fehlerbericht
+cronjob_recipients_info = Empfänger-Konfiguration
+cronjob_recipients_info_notice = Die Empfänger werden zentral in den <a href="index.php?page=phpmailer/mail_tools/settings">AddOn-Einstellungen</a> konfiguriert.
 cronjob_retry_name = E-Mail Retry
 cronjob_retry_info_label = Information
 cronjob_retry_info_notice = Dieser Cronjob versendet E-Mails mit temporären Fehlern (z.B. Timeout, Greylisting) automatisch erneut. Max. 3 Versuche pro E-Mail.

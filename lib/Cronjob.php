@@ -13,8 +13,12 @@ class Cronjob extends rex_cronjob
 {
     public function execute(): bool
     {
-        // Konfiguration aus Cronjob-Parametern laden
-        $recipients = $this->getParam('recipients', '');
+        $addon = \rex_addon::get('mail_tools');
+
+        // Empfänger aus zentraler AddOn-Konfiguration laden
+        $recipients = $addon->getConfig('report_recipients', '');
+
+        // Weitere Optionen aus Cronjob-Parametern
         $onlyErrors = (bool) $this->getParam('only_errors', true);
         $attachEml = (bool) $this->getParam('attach_eml', false);
         $filterSubject = trim((string) $this->getParam('filter_subject', ''));
@@ -127,10 +131,10 @@ class Cronjob extends rex_cronjob
 
         return [
             [
-                'label' => $addon->i18n('config_recipients'),
-                'name' => 'recipients',
-                'type' => 'text',
-                'notice' => $addon->i18n('config_recipients_notice'),
+                'label' => $addon->i18n('cronjob_recipients_info'),
+                'name' => 'info',
+                'type' => 'readonly',
+                'notice' => $addon->i18n('cronjob_recipients_info_notice'),
             ],
             [
                 'name' => 'only_errors',

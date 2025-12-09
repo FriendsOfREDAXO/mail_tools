@@ -16,6 +16,7 @@ if (rex_post('save_settings', 'bool', false)) {
     $addon->setConfig('check_mx', rex_post('check_mx', 'bool', false));
     $addon->setConfig('check_disposable', rex_post('check_disposable', 'bool', false));
     $addon->setConfig('check_typos', rex_post('check_typos', 'bool', false));
+    $addon->setConfig('report_recipients', rex_post('report_recipients', 'string', ''));
     
     echo rex_view::success($addon->i18n('settings_saved'));
 }
@@ -27,6 +28,7 @@ $blockedTlds = $addon->getConfig('blocked_tlds', '');
 $checkMx = $addon->getConfig('check_mx', false);
 $checkDisposable = $addon->getConfig('check_disposable', false);
 $checkTypos = $addon->getConfig('check_typos', false);
+$reportRecipients = $addon->getConfig('report_recipients', '');
 
 $content = '
 <form action="' . rex_url::currentBackendPage() . '" method="post">
@@ -93,6 +95,17 @@ $content = '
                 </label>
                 <p class="help-block">' . $addon->i18n('settings_check_typos_notice') . '</p>
             </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>' . $addon->i18n('settings_cronjob_title') . '</legend>
+        
+        <div class="form-group">
+            <label for="report_recipients">' . $addon->i18n('settings_report_recipients_label') . '</label>
+            <input type="text" class="form-control" id="report_recipients" name="report_recipients" 
+                   value="' . rex_escape($reportRecipients) . '" placeholder="admin@example.com, info@example.com">
+            <p class="help-block">' . $addon->i18n('settings_report_recipients_notice') . '</p>
         </div>
     </fieldset>
 
