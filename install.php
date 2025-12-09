@@ -11,7 +11,7 @@ if (!$this->hasConfig('validate_domains')) {
     $this->setConfig('validate_domains', true);
 }
 if (!$this->hasConfig('invalid_domain_action')) {
-    $this->setConfig('invalid_domain_action', 'block_all'); // block_all, block_invalid, log_only
+    $this->setConfig('invalid_domain_action', 'block_invalid'); // block_all, block_invalid, log_only
 }
 
 // Tabelle für bereits gemeldete Fehler

@@ -144,7 +144,7 @@ class PreSendValidator
     private static function abortSend(rex_mailer $mailer, array $invalidRecipients): void
     {
         $addon = rex_addon::get('mail_tools');
-        $blockMode = $addon->getConfig('invalid_domain_action', 'block_all');
+        $blockMode = $addon->getConfig('invalid_domain_action', 'block_invalid');
 
         $emails = array_column($invalidRecipients, 'email');
         $messages = array_column($invalidRecipients, 'message');
