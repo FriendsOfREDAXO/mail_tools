@@ -4,6 +4,8 @@ Ein REDAXO AddOn mit nützlichen E-Mail-Werkzeugen für Überwachung, Diagnose u
 
 Features: 
 - SMTP-Diagnose mit verständlichen Hilfestellungen
+- SPF/DKIM/DMARC Reputation-Check
+- Blacklist-Prüfung (Spamhaus, SpamCop, Barracuda, SORBS)
 - Testmail-Versand mit detaillierter Fehleranalyse
 - Mail-Statistik mit Heatmap und Erfolgsquote
 - Fehler-Log mit Cronjob-Benachrichtigung
@@ -14,6 +16,7 @@ Features:
 ## Features im Detail
 
 - **SMTP-Diagnose**: Umfassende Prüfung der E-Mail-Konfiguration mit verständlichen Hilfestellungen
+- **Absender-Reputation**: SPF/DKIM/DMARC-Prüfung und Blacklist-Check
 - **Testmail-Versand**: Schneller Test mit detaillierter Fehleranalyse
 - **Mail-Statistik**: Übersicht über Versandvolumen, Erfolgsquote und Versandzeiten (Heatmap)
 - **Domain-Validator**: Prüft E-Mail-Domains via DNS/MX-Lookup
@@ -40,6 +43,21 @@ Die Diagnose-Seite bietet eine umfassende Prüfung der E-Mail-Konfiguration:
   - SSL/TLS-Zertifikat
   - SMTP-Handshake
   - Provider-spezifische Prüfungen (Microsoft 365, Gmail, etc.)
+  - **SPF-Record** Prüfung mit Warnung bei unsicherer Konfiguration
+  - **DKIM-Record** Suche mit gängigen Selektoren
+  - **DMARC-Policy** Analyse (reject/quarantine/none)
+  - **Blacklist-Check** gegen Spamhaus, SpamCop, Barracuda, SORBS
+
+### Absender-Reputation
+
+Die Diagnose prüft automatisch die Reputation Ihrer Absender-Domain:
+
+| Check | Beschreibung |
+|-------|-------------|
+| **SPF** | Sender Policy Framework - Definiert welche Server E-Mails für Ihre Domain senden dürfen |
+| **DKIM** | DomainKeys Identified Mail - Digitale Signatur zur Authentifizierung |
+| **DMARC** | Domain-based Message Authentication - Policy für SPF/DKIM-Fehler |
+| **Blacklist** | Prüfung ob Ihre Server-IP auf Spam-Blacklists steht |
 
 ### Verständliche Fehlermeldungen
 
@@ -47,6 +65,13 @@ Bei Problemen erhalten Sie:
 - **Klartext-Erklärung**: Was bedeutet der Fehler?
 - **Lösungsvorschläge**: Konkrete Schritte zur Behebung
 - **Technische Details**: Für Entwickler ausklappbar
+
+### Externe Diagnose-Tools
+
+Für erweiterte Analysen werden Links zu diesen Tools angeboten:
+- [MXToolbox SuperTool](https://mxtoolbox.com/SuperTool.aspx) - Umfassende DNS/Mail-Analyse
+- [KLXM E-Mail Check](https://klxm.de/check) - Schneller E-Mail-Test
+- [Mail-Tester](https://www.mail-tester.com/) - Spam-Score Analyse
 
 ### Erkannte Provider
 

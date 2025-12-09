@@ -406,6 +406,12 @@ body.rex-theme-dark .mail-tools-diag {
 .mail-tools-diag-testbuttons {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.mail-tools-diag-testbuttons .btn {
+    white-space: nowrap;
 }
 
 /* ==========================================================================
@@ -479,6 +485,58 @@ body.rex-theme-dark .mail-tools-diag {
 }
 
 /* ==========================================================================
+   Externe Tools Links
+   ========================================================================== */
+.mail-tools-diag-external {
+    background: var(--diag-bg);
+    border: 1px solid var(--diag-border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.mail-tools-diag-external h4 {
+    color: var(--diag-text);
+    margin: 0 0 5px 0;
+    font-size: 16px;
+}
+
+.mail-tools-diag-external h4 i {
+    margin-right: 8px;
+    color: var(--diag-info);
+}
+
+.mail-tools-diag-external .text-muted {
+    color: var(--diag-muted) !important;
+    margin-bottom: 15px;
+}
+
+.mail-tools-diag-external-bottom {
+    margin-top: 20px;
+}
+
+.mail-tools-diag-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.mail-tools-diag-links .btn {
+    background: var(--diag-info-bg);
+    border-color: var(--diag-info);
+    color: var(--diag-info-text);
+}
+
+.mail-tools-diag-links .btn:hover {
+    background: var(--diag-info);
+    color: #fff;
+}
+
+.mail-tools-diag-links .btn i {
+    margin-right: 6px;
+}
+
+/* ==========================================================================
    Responsive
    ========================================================================== */
 @media (max-width: 768px) {
@@ -506,5 +564,14 @@ body.rex-theme-dark .mail-tools-diag {
     
     .mail-tools-diag-testbuttons .btn {
         width: 100%;
+    }
+    
+    .mail-tools-diag-links {
+        flex-direction: column;
+    }
+    
+    .mail-tools-diag-links .btn {
+        width: 100%;
+        text-align: center;
     }
 }

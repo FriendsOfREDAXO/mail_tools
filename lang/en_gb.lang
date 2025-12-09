@@ -100,6 +100,10 @@ help_cronjob_step2 = Create a new cronjob of type "E-Mail Error Report"
 help_cronjob_step3 = Configure the schedule (e.g. daily)
 help_cronjob_step4 = Activate the cronjob
 
+# External Tools
+mail_tools_diag_external_tools = More Diagnostic Tools
+mail_tools_diag_external_desc = For advanced analysis you can use these external tools:
+
 # Test page
 test_title = Test Domain Validator
 test_email_label = Email Address

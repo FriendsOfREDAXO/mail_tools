@@ -400,7 +400,7 @@ document.addEventListener("DOMContentLoaded", function() {
 // Hauptinhalt
 $content .= '<div class="mail-tools-diag">';
 
-// Testmail-Box
+// Testmail-Box mit allen Aktionen
 $content .= '
 <div class="mail-tools-diag-testbox">
     <h4><i class="fa fa-envelope"></i> ' . rex_i18n::msg('mail_tools_diag_send_testmail') . '</h4>
@@ -418,26 +418,67 @@ $content .= '
             <button type="button" id="btn-send-test" class="btn btn-success" onclick="MailToolsDiag.sendTestMail()">
                 <i class="fa fa-paper-plane"></i> ' . rex_i18n::msg('mail_tools_diag_send_test') . '
             </button>
+            <button type="button" class="btn btn-primary" onclick="MailToolsDiag.runDiagnostics()">
+                <i class="fa fa-refresh"></i> ' . rex_i18n::msg('mail_tools_diag_run_again') . '
+            </button>
+            <a href="' . rex_url::backendPage('phpmailer/config') . '" class="btn btn-default">
+                <i class="fa fa-cog"></i> ' . rex_i18n::msg('mail_tools_diag_open_config') . '
+            </a>
         </div>
     </div>
     <div id="mail-tools-test-result"></div>
 </div>
 ';
 
-// Aktionen
+// Externe Diagnose-Links
 $content .= '
-<div class="mail-tools-diag-actions">
-    <button type="button" class="btn btn-primary" onclick="MailToolsDiag.runDiagnostics()">
-        <i class="fa fa-refresh"></i> ' . rex_i18n::msg('mail_tools_diag_run_again') . '
-    </button>
-    <a href="' . rex_url::backendPage('phpmailer/config') . '" class="btn btn-default">
-        <i class="fa fa-cog"></i> ' . rex_i18n::msg('mail_tools_diag_open_config') . '
-    </a>
+<div class="mail-tools-diag-external">
+    <h4><i class="fa fa-external-link"></i> ' . rex_i18n::msg('mail_tools_diag_external_tools') . '</h4>
+    <p class="text-muted">' . rex_i18n::msg('mail_tools_diag_external_desc') . '</p>
+    <div class="mail-tools-diag-links">
+        <a href="https://mxtoolbox.com/SuperTool.aspx" target="_blank" rel="noopener" class="btn btn-default">
+            <i class="fa fa-wrench"></i> MXToolbox SuperTool
+        </a>
+        <a href="https://klxm.de/check" target="_blank" rel="noopener" class="btn btn-default">
+            <i class="fa fa-envelope-open"></i> KLXM E-Mail Check
+        </a>
+        <a href="https://www.mail-tester.com/" target="_blank" rel="noopener" class="btn btn-default">
+            <i class="fa fa-star"></i> Mail-Tester
+        </a>
+    </div>
 </div>
 ';
 
 // Ergebnis-Container
 $content .= '<div id="mail-tools-diag-results"></div>';
+
+// Externe Diagnose-Links am Ende
+$content .= '
+<div class="mail-tools-diag-external mail-tools-diag-external-bottom">
+    <h4><i class="fa fa-external-link"></i> ' . rex_i18n::msg('mail_tools_diag_external_tools') . '</h4>
+    <p class="text-muted">' . rex_i18n::msg('mail_tools_diag_external_desc') . '</p>
+    <div class="mail-tools-diag-links">
+        <a href="https://mxtoolbox.com/SuperTool.aspx" target="_blank" rel="noopener" class="btn btn-default">
+            <i class="fa fa-wrench"></i> MXToolbox SuperTool
+        </a>
+        <a href="https://klxm.de/check" target="_blank" rel="noopener" class="btn btn-default">
+            <i class="fa fa-envelope-open"></i> KLXM E-Mail Check
+        </a>
+        <a href="https://www.mail-tester.com/" target="_blank" rel="noopener" class="btn btn-default">
+            <i class="fa fa-star"></i> Mail-Tester
+        </a>
+        <a href="https://www.dmarcanalyzer.com/spf/checker/" target="_blank" rel="noopener" class="btn btn-default">
+            <i class="fa fa-shield"></i> SPF Checker
+        </a>
+        <a href="https://mxtoolbox.com/blacklists.aspx" target="_blank" rel="noopener" class="btn btn-default">
+            <i class="fa fa-ban"></i> Blacklist Check
+        </a>
+        <a href="https://www.learndmarc.com/" target="_blank" rel="noopener" class="btn btn-default">
+            <i class="fa fa-graduation-cap"></i> Learn DMARC
+        </a>
+    </div>
+</div>
+';
 
 $content .= '</div>';
 

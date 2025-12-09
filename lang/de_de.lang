@@ -101,6 +101,10 @@ help_cronjob_step2 = Erstellen Sie einen neuen Cronjob vom Typ "E-Mail Fehlerber
 help_cronjob_step3 = Konfigurieren Sie den Zeitplan (z.B. täglich)
 help_cronjob_step4 = Aktivieren Sie den Cronjob
 
+# Externe Tools
+mail_tools_diag_external_tools = Weitere Diagnose-Tools
+mail_tools_diag_external_desc = Für erweiterte Analysen können Sie diese externen Tools nutzen:
+
 # Testseite
 test_title = Domain-Validator testen
 test_email_label = E-Mail-Adresse
