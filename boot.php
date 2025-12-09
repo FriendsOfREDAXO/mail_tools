@@ -6,6 +6,11 @@
  * @var rex_addon $this
  */
 
+// PHPMailer Pre-Send Validator registrieren
+if (rex_addon::get('phpmailer')->isAvailable()) {
+    \FriendsOfRedaxo\MailTools\PreSendValidator::register();
+}
+
 // Cronjobs registrieren, wenn Cronjob-Addon verfügbar
 if (rex_addon::get('cronjob')->isAvailable()) {
     rex_cronjob_manager::registerType(\FriendsOfRedaxo\MailTools\Cronjob::class);

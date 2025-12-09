@@ -3,6 +3,7 @@
 Ein REDAXO AddOn mit nützlichen E-Mail-Werkzeugen für Überwachung, Diagnose und Validierung.
 
 Features: 
+- **Pre-Send Validator**: Domain-Prüfung vor dem Versand
 - SMTP-Diagnose mit verständlichen Hilfestellungen
 - SPF/DKIM/DMARC Reputation-Check
 - Blacklist-Prüfung (Spamhaus, SpamCop, Barracuda, SORBS)
@@ -15,6 +16,7 @@ Features:
 
 ## Features im Detail
 
+- **Pre-Send Validator**: Prüft Empfänger-Domains vor dem Versand und blockiert ungültige Adressen
 - **SMTP-Diagnose**: Umfassende Prüfung der E-Mail-Konfiguration mit verständlichen Hilfestellungen
 - **Absender-Reputation**: SPF/DKIM/DMARC-Prüfung und Blacklist-Check
 - **Testmail-Versand**: Schneller Test mit detaillierter Fehleranalyse
@@ -25,6 +27,38 @@ Features:
 - **Cronjob Retry**: Automatisches erneutes Senden bei temporären Fehlern
 - **YForm-Validator**: E-Mail-Domain-Prüfung für Formulare
 - **YForm Mailer**: E-Mail-Versand beim Speichern (Tablemanager-kompatibel)
+
+---
+
+## 🛡️ Pre-Send Validator
+
+Der Pre-Send Validator prüft **vor jedem E-Mail-Versand** ob die Empfänger-Domains gültig sind.
+
+### Funktionen
+
+- **Domain-Prüfung**: Prüft ob die Empfänger-Domain existiert (DNS A/AAAA-Record)
+- **MX-Record-Prüfung**: Optional - Prüft ob die Domain einen Mail-Server hat
+- **Wegwerf-E-Mail-Erkennung**: Blockiert bekannte Wegwerf-Dienste (tempmail, guerrillamail, etc.)
+- **Tippfehler-Erkennung**: Erkennt häufige Tippfehler (gmial.com → gmail.com)
+
+### Konfiguration
+
+Unter **Einstellungen** können Sie festlegen:
+
+| Option | Beschreibung |
+|--------|-------------|
+| **Versand blockieren** | E-Mail wird nicht versendet, Fehler wird geloggt |
+| **Nur ungültige entfernen** | Gültige Empfänger erhalten die E-Mail, ungültige werden entfernt |
+| **Nur loggen** | E-Mail wird versendet, Fehler wird nur protokolliert |
+
+### Testseite
+
+Auf der **Test**-Seite können Sie E-Mail-Adressen prüfen bevor sie verwendet werden:
+- Syntax-Prüfung
+- Domain-Existenz
+- MX-Record vorhanden
+- Wegwerf-E-Mail-Erkennung
+- Tippfehler-Erkennung
 
 ---
 

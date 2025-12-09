@@ -6,6 +6,14 @@
  * @var rex_addon $this
  */
 
+// Default-Konfiguration setzen
+if (!$this->hasConfig('validate_domains')) {
+    $this->setConfig('validate_domains', true);
+}
+if (!$this->hasConfig('invalid_domain_action')) {
+    $this->setConfig('invalid_domain_action', 'block_all'); // block_all, block_invalid, log_only
+}
+
 // Tabelle für bereits gemeldete Fehler
 rex_sql_table::get(rex::getTable('mail_tools_reported'))
     ->ensurePrimaryIdColumn()

@@ -327,3 +327,183 @@ $fragment = new rex_fragment();
 $fragment->setVar('title', $addon->i18n('test_examples_title'));
 $fragment->setVar('body', $examplesContent, false);
 echo $fragment->parse('core/page/section.php');
+
+// ============================================
+// Pre-Send Validator Test
+// ============================================
+
+$preSendTestEmail = rex_request('presend_email', 'string', '');
+$preSendResult = null;
+
+if (rex_post('presend_test', 'bool', false) && $preSendTestEmail !== '') {
+    $preSendResult = [];
+    
+    // Alle Checks durchführen die der PreSendValidator macht
+    $domain = DomainValidator::extractDomain($preSendTestEmail);
+    
+    // 1. Syntax-Check
+    $preSendResult['syntax'] = [
+        'check' => $addon->i18n('test_presend_syntax'),
+        'status' => filter_var($preSendTestEmail, FILTER_VALIDATE_EMAIL) ? 'ok' : 'error',
+        'message' => filter_var($preSendTestEmail, FILTER_VALIDATE_EMAIL) 
+            ? $addon->i18n('test_presend_syntax_ok')
+            : $addon->i18n('test_presend_syntax_error'),
+    ];
+    
+    // 2. Domain existiert (DNS A/AAAA)
+    if ($domain) {
+        $domainExists = DomainValidator::isDomainValid($domain);
+        $preSendResult['domain'] = [
+            'check' => $addon->i18n('test_presend_domain'),
+            'status' => $domainExists ? 'ok' : 'error',
+            'message' => $domainExists 
+                ? $addon->i18n('test_presend_domain_ok', $domain)
+                : $addon->i18n('test_presend_domain_error', $domain),
+        ];
+        
+        // 3. MX-Record vorhanden
+        $hasMx = DomainValidator::hasMxRecord($domain);
+        $preSendResult['mx'] = [
+            'check' => $addon->i18n('test_presend_mx'),
+            'status' => $hasMx ? 'ok' : 'warning',
+            'message' => $hasMx 
+                ? $addon->i18n('test_presend_mx_ok')
+                : $addon->i18n('test_presend_mx_warning'),
+        ];
+        
+        // 4. Disposable E-Mail Check
+        $disposableDomains = ['tempmail.com', 'guerrillamail.com', 'mailinator.com', '10minutemail.com', 
+            'throwaway.email', 'temp-mail.org', 'fakeinbox.com', 'trashmail.com', 'yopmail.com'];
+        $isDisposable = in_array(strtolower($domain), $disposableDomains, true);
+        $preSendResult['disposable'] = [
+            'check' => $addon->i18n('test_presend_disposable'),
+            'status' => $isDisposable ? 'warning' : 'ok',
+            'message' => $isDisposable 
+                ? $addon->i18n('test_presend_disposable_warning')
+                : $addon->i18n('test_presend_disposable_ok'),
+        ];
+        
+        // 5. Tippfehler-Erkennung
+        $commonDomains = [
+            'gmail.com' => ['gmial.com', 'gmal.com', 'gmil.com', 'gmaill.com', 'gmail.de'],
+            'yahoo.com' => ['yaho.com', 'yahooo.com', 'yahoo.de'],
+            'hotmail.com' => ['hotmal.com', 'hotmai.com', 'hotmail.de'],
+            'outlook.com' => ['outlok.com', 'outlock.com'],
+            'web.de' => ['wep.de', 'webb.de'],
+            'gmx.de' => ['gmx.com', 'gm.de'],
+        ];
+        $typoSuggestion = null;
+        foreach ($commonDomains as $correct => $typos) {
+            if (in_array(strtolower($domain), $typos, true)) {
+                $typoSuggestion = $correct;
+                break;
+            }
+        }
+        $preSendResult['typo'] = [
+            'check' => $addon->i18n('test_presend_typo'),
+            'status' => $typoSuggestion ? 'warning' : 'ok',
+            'message' => $typoSuggestion 
+                ? $addon->i18n('test_presend_typo_warning', $typoSuggestion)
+                : $addon->i18n('test_presend_typo_ok'),
+        ];
+    } else {
+        $preSendResult['domain'] = [
+            'check' => $addon->i18n('test_presend_domain'),
+            'status' => 'error',
+            'message' => $addon->i18n('test_presend_domain_extract_error'),
+        ];
+    }
+    
+    // Gesamtergebnis
+    $hasError = false;
+    $hasWarning = false;
+    foreach ($preSendResult as $check) {
+        if ($check['status'] === 'error') $hasError = true;
+        if ($check['status'] === 'warning') $hasWarning = true;
+    }
+    $preSendResult['_overall'] = $hasError ? 'error' : ($hasWarning ? 'warning' : 'ok');
+}
+
+// Pre-Send Test Formular
+$preSendFormContent = '
+<p>' . $addon->i18n('test_presend_desc') . '</p>
+<form action="' . rex_url::currentBackendPage() . '" method="post" class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-2 control-label" for="presend_email">' . $addon->i18n('test_email_label') . '</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="presend_email" name="presend_email" 
+                   value="' . rex_escape($preSendTestEmail) . '" placeholder="test@gmial.com" required>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-6">
+            <button type="submit" name="presend_test" value="1" class="btn btn-primary">
+                <i class="rex-icon fa-check"></i> ' . $addon->i18n('test_presend_button') . '
+            </button>
+        </div>
+    </div>
+</form>';
+
+// Ergebnis anzeigen
+if ($preSendResult !== null) {
+    $overall = $preSendResult['_overall'];
+    $overallClass = $overall === 'ok' ? 'success' : ($overall === 'warning' ? 'warning' : 'danger');
+    $overallIcon = $overall === 'ok' ? 'fa-check-circle' : ($overall === 'warning' ? 'fa-exclamation-triangle' : 'fa-times-circle');
+    $overallText = $overall === 'ok' 
+        ? $addon->i18n('test_presend_result_ok')
+        : ($overall === 'warning' ? $addon->i18n('test_presend_result_warning') : $addon->i18n('test_presend_result_error'));
+    
+    $preSendFormContent .= '
+    <hr>
+    <div class="alert alert-' . $overallClass . '">
+        <i class="fa ' . $overallIcon . ' fa-2x pull-left" style="margin-right: 15px;"></i>
+        <strong style="font-size: 1.2em;">' . $overallText . '</strong>
+    </div>
+    
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th width="200">' . $addon->i18n('test_presend_check') . '</th>
+                <th>' . $addon->i18n('test_presend_result') . '</th>
+            </tr>
+        </thead>
+        <tbody>';
+    
+    foreach ($preSendResult as $key => $check) {
+        if ($key === '_overall') continue;
+        
+        $statusIcon = $check['status'] === 'ok' ? '✅' : ($check['status'] === 'warning' ? '⚠️' : '❌');
+        $statusClass = $check['status'] === 'ok' ? 'success' : ($check['status'] === 'warning' ? 'warning' : 'danger');
+        
+        $preSendFormContent .= '
+            <tr>
+                <th>' . rex_escape($check['check']) . '</th>
+                <td><span class="text-' . $statusClass . '">' . $statusIcon . ' ' . rex_escape($check['message']) . '</span></td>
+            </tr>';
+    }
+    
+    $preSendFormContent .= '
+        </tbody>
+    </table>';
+    
+    // Aktuelle Einstellungen anzeigen
+    $validateActive = $addon->getConfig('validate_domains', true);
+    $currentAction = $addon->getConfig('invalid_domain_action', 'block_all');
+    
+    $preSendFormContent .= '
+    <div class="panel panel-default">
+        <div class="panel-heading"><strong>' . $addon->i18n('test_presend_current_settings') . '</strong></div>
+        <div class="panel-body">
+            <p><strong>' . $addon->i18n('settings_status_validation') . ':</strong> ' . 
+                ($validateActive ? '<span class="text-success">' . $addon->i18n('settings_active') . '</span>' : '<span class="text-muted">' . $addon->i18n('settings_inactive') . '</span>') . '</p>
+            <p><strong>' . $addon->i18n('settings_invalid_action_label') . ':</strong> ' . $addon->i18n('settings_action_' . $currentAction) . '</p>
+            ' . ($overall !== 'ok' && $validateActive ? '<p class="text-' . $overallClass . '"><i class="fa fa-info-circle"></i> ' . $addon->i18n('test_presend_would_' . $currentAction) . '</p>' : '') . '
+        </div>
+    </div>';
+}
+
+$fragment = new rex_fragment();
+$fragment->setVar('class', 'primary', false);
+$fragment->setVar('title', $addon->i18n('test_presend_title'));
+$fragment->setVar('body', $preSendFormContent, false);
+echo $fragment->parse('core/page/section.php');

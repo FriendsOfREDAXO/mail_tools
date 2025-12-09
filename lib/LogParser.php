@@ -58,7 +58,17 @@ class LogParser
         $entries = self::getLogEntries($limit);
 
         return array_filter($entries, static function ($entry) {
-            return 'ERROR' === $entry['status'];
+            if ('ERROR' !== $entry['status']) {
+                return false;
+            }
+            
+            // Nur Fehler ohne jeglichen Empfänger filtern 
+            // (z.B. "Bitte geben Sie mindestens eine Empfängeradresse an")
+            if ('' === trim($entry['to'])) {
+                return false;
+            }
+            
+            return true;
         });
     }
 

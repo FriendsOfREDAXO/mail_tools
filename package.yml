@@ -24,6 +24,9 @@ pages:
             test:
                 title: 'translate:navigation_test'
                 icon: rex-icon fa-flask
+            settings:
+                title: 'translate:navigation_settings'
+                icon: rex-icon fa-cog
             help:
                 title: 'translate:navigation_help'
                 icon: rex-icon fa-question-circle

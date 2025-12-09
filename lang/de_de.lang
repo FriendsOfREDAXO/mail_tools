@@ -7,10 +7,66 @@ navigation_stats = Statistik
 navigation_diagnostics = Diagnose
 navigation_log = Fehler-Log
 navigation_test = Test
+navigation_settings = Einstellungen
 navigation_help = Hilfe
 
 # PHPMailer Check
 phpmailer_not_available = Das PHPMailer AddOn ist nicht verfügbar. Bitte installieren und aktivieren Sie es zuerst.
+
+# Settings
+settings_title = Einstellungen
+settings_saved = Einstellungen wurden gespeichert.
+settings_validation_title = Domain-Validierung vor Versand
+settings_validate_domains_label = E-Mail-Domains vor dem Versand prüfen
+settings_validate_domains_notice = Prüft vor jedem E-Mail-Versand, ob die Empfänger-Domain existiert (DNS-Lookup).
+settings_invalid_action_label = Aktion bei ungültiger Domain
+settings_invalid_action_notice = Was soll passieren, wenn eine Empfänger-Domain nicht existiert?
+settings_action_block_all = Versand komplett blockieren
+settings_action_block_invalid = Nur ungültige Empfänger entfernen
+settings_action_log_only = Nur loggen, trotzdem senden
+settings_additional_checks = Zusätzliche Prüfungen
+settings_check_mx_label = MX-Record prüfen (Mail-Server vorhanden)
+settings_check_mx_notice = Prüft ob die Domain einen Mail-Server (MX-Record) hat. Domains ohne MX können oft keine E-Mails empfangen.
+settings_check_disposable_label = Wegwerf-E-Mail-Adressen erkennen
+settings_check_disposable_notice = Blockiert bekannte Wegwerf-E-Mail-Dienste wie tempmail.com, guerrillamail.com etc.
+settings_check_typos_label = Tippfehler-Erkennung
+settings_check_typos_notice = Erkennt häufige Tippfehler wie gmial.com statt gmail.com.
+settings_save = Speichern
+settings_status_title = Aktueller Status
+settings_status_validation = Domain-Validierung
+settings_status_action = Aktion bei Fehler
+settings_active = Aktiv
+settings_inactive = Inaktiv
+
+# Pre-Send Validator Test
+test_presend_title = Pre-Send Validator testen
+test_presend_desc = Testen Sie, wie der Pre-Send Validator eine E-Mail-Adresse prüfen würde, bevor sie versendet wird.
+test_presend_button = Adresse prüfen
+test_presend_check = Prüfung
+test_presend_result = Ergebnis
+test_presend_result_ok = E-Mail-Adresse ist gültig - Versand würde erfolgen
+test_presend_result_warning = E-Mail-Adresse hat Warnungen
+test_presend_result_error = E-Mail-Adresse ist ungültig - Versand würde blockiert
+test_presend_syntax = Syntax
+test_presend_syntax_ok = E-Mail-Format ist korrekt
+test_presend_syntax_error = Ungültiges E-Mail-Format
+test_presend_domain = Domain existiert
+test_presend_domain_ok = Domain {0} existiert
+test_presend_domain_error = Domain {0} existiert nicht
+test_presend_domain_extract_error = Domain konnte nicht extrahiert werden
+test_presend_mx = MX-Record (Mail-Server)
+test_presend_mx_ok = Domain hat einen Mail-Server
+test_presend_mx_warning = Kein MX-Record gefunden - E-Mails könnten nicht ankommen
+test_presend_disposable = Wegwerf-E-Mail
+test_presend_disposable_ok = Keine bekannte Wegwerf-Domain
+test_presend_disposable_warning = Bekannte Wegwerf-E-Mail-Domain erkannt
+test_presend_typo = Tippfehler
+test_presend_typo_ok = Kein Tippfehler erkannt
+test_presend_typo_warning = Meinten Sie {0}?
+test_presend_current_settings = Aktuelle Einstellungen
+test_presend_would_block_all = Diese E-Mail würde NICHT versendet werden (Versand blockiert)
+test_presend_would_block_invalid = Diese E-Mail würde aus der Empfängerliste entfernt werden
+test_presend_would_log_only = Diese E-Mail würde versendet werden (nur Logging)
 
 # Config
 config_title = E-Mail Fehlerberichte

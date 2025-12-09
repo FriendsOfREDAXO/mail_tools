@@ -7,10 +7,66 @@ navigation_stats = Statistics
 navigation_diagnostics = Diagnostics
 navigation_log = Error Log
 navigation_test = Test
+navigation_settings = Settings
 navigation_help = Help
 
 # PHPMailer Check
 phpmailer_not_available = The PHPMailer AddOn is not available. Please install and activate it first.
+
+# Settings
+settings_title = Settings
+settings_saved = Settings have been saved.
+settings_validation_title = Domain Validation Before Sending
+settings_validate_domains_label = Validate email domains before sending
+settings_validate_domains_notice = Checks if the recipient domain exists (DNS lookup) before sending each email.
+settings_invalid_action_label = Action on Invalid Domain
+settings_invalid_action_notice = What should happen when a recipient domain does not exist?
+settings_action_block_all = Block sending completely
+settings_action_block_invalid = Remove only invalid recipients
+settings_action_log_only = Log only, send anyway
+settings_additional_checks = Additional Checks
+settings_check_mx_label = Check MX record (mail server exists)
+settings_check_mx_notice = Checks if the domain has a mail server (MX record). Domains without MX often cannot receive emails.
+settings_check_disposable_label = Detect disposable email addresses
+settings_check_disposable_notice = Blocks known disposable email services like tempmail.com, guerrillamail.com etc.
+settings_check_typos_label = Typo detection
+settings_check_typos_notice = Detects common typos like gmial.com instead of gmail.com.
+settings_save = Save
+settings_status_title = Current Status
+settings_status_validation = Domain Validation
+settings_status_action = Action on Error
+settings_active = Active
+settings_inactive = Inactive
+
+# Pre-Send Validator Test
+test_presend_title = Test Pre-Send Validator
+test_presend_desc = Test how the Pre-Send Validator would check an email address before sending.
+test_presend_button = Check Address
+test_presend_check = Check
+test_presend_result = Result
+test_presend_result_ok = Email address is valid - sending would proceed
+test_presend_result_warning = Email address has warnings
+test_presend_result_error = Email address is invalid - sending would be blocked
+test_presend_syntax = Syntax
+test_presend_syntax_ok = Email format is correct
+test_presend_syntax_error = Invalid email format
+test_presend_domain = Domain exists
+test_presend_domain_ok = Domain {0} exists
+test_presend_domain_error = Domain {0} does not exist
+test_presend_domain_extract_error = Could not extract domain
+test_presend_mx = MX Record (Mail Server)
+test_presend_mx_ok = Domain has a mail server
+test_presend_mx_warning = No MX record found - emails may not arrive
+test_presend_disposable = Disposable Email
+test_presend_disposable_ok = Not a known disposable domain
+test_presend_disposable_warning = Known disposable email domain detected
+test_presend_typo = Typo
+test_presend_typo_ok = No typo detected
+test_presend_typo_warning = Did you mean {0}?
+test_presend_current_settings = Current Settings
+test_presend_would_block_all = This email would NOT be sent (sending blocked)
+test_presend_would_block_invalid = This email would be removed from the recipient list
+test_presend_would_log_only = This email would be sent (logging only)
 
 # Config
 config_title = E-Mail Error Reports
