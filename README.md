@@ -11,8 +11,8 @@ Features:
 - Mail-Statistik mit Heatmap und Erfolgsquote
 - Fehler-Log mit Cronjob-Benachrichtigung
 - Automatischer Retry bei temporären Fehlern
-- YForm-Validator für E-Mail-Domain-Prüfung
-- YForm Mailer Value für E-Mail-Versand
+- YForm-Validator für E-Mail-Domain-Prüfung (**EXPERIMENTELL**)
+- YForm Mailer Value für E-Mail-Versand (**EXPERIMENTELL**)
 
 ## Features im Detail
 
