@@ -132,6 +132,56 @@ class BounceHandler
         return ['success' => true, 'folders' => $folders];
     }
 
+    /**
+     * Holt die letzten N E-Mails zur Diagnose.
+     * 
+     * @return array{error?: string, count?: int, emails?: array<int, array<string, mixed>>}
+     */
+    public static function getRecentEmails(string $host, string $user, string $password, int $port = 993, string $folder = 'INBOX', int $limit = 5): array
+    {
+        if (!function_exists('imap_open')) {
+            return ['error' => 'PHP IMAP extension is not available.'];
+        }
+
+        $mailbox = sprintf('{%s:%d/imap/ssl}%s', $host, $port, $folder);
+        $mbox = @imap_open($mailbox, $user, $password);
+
+        if (!$mbox) {
+            return ['error' => 'Connection failed: ' . imap_last_error()];
+        }
+
+        $numMsg = imap_num_msg($mbox);
+        $emails = [];
+
+        if ($numMsg > 0) {
+            $start = max(1, $numMsg - $limit + 1);
+            // Rückwärts iterieren für die neuesten zuerst
+            for ($i = $numMsg; $i >= $start; --$i) {
+                $header = imap_headerinfo($mbox, $i);
+                
+                $from = '(Unknown)';
+                if (isset($header->from[0])) {
+                    $from = sprintf('%s@%s', $header->from[0]->mailbox, $header->from[0]->host);
+                }
+
+                $emails[] = [
+                    'id' => $i,
+                    'subject' => isset($header->subject) ? imap_utf8($header->subject) : '(No Subject)',
+                    'from' => $from,
+                    'date' => $header->date ?? '(No Date)',
+                    'flags' => [
+                        'seen' => ($header->Unseen == 'U' || $header->Recent == 'N') ? 'Seen' : 'Unseen',
+                        'flagged' => ($header->Flagged == 'F') ? 'Flagged' : 'Unflagged',
+                        'recent' => ($header->Recent == 'R') ? 'Recent' : 'Not Recent',
+                    ]
+                ];
+            }
+        }
+
+        imap_close($mbox);
+        return ['count' => $numMsg, 'emails' => $emails];
+    }
+
     private static function extractEmailFromBody(string $body): ?string
     {
         // Suche nach "Final-Recipient: rfc822; email@example.com"

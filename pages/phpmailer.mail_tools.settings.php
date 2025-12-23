@@ -162,10 +162,14 @@ $content = '
                     <button class="btn btn-default" type="button" id="test-imap-connection">
                         <i class="fa fa-refresh"></i> Test & Load Folders
                     </button>
+                    <button class="btn btn-info" type="button" id="debug-imap-emails">
+                        <i class="fa fa-bug"></i> Debug: Show last 5 Emails
+                    </button>
                 </span>
             </div>
             <p class="help-block">Folder to check for bounces (e.g. INBOX or Bounces)</p>
             <div id="imap-test-result" style="margin-top: 10px;"></div>
+            <div id="imap-debug-result" style="margin-top: 10px;"></div>
         </div>
         
         <div class="form-group">
@@ -236,6 +240,54 @@ document.addEventListener("DOMContentLoaded", function() {
             .catch(error => {
                 btn.disabled = false;
                 btn.innerHTML = "<i class=\'fa fa-refresh\'></i> Test & Load Folders";
+                resultDiv.innerHTML = "<div class=\'alert alert-danger\'>Error: " + error + "</div>";
+            });
+    document.getElementById("debug-imap-emails").addEventListener("click", function() {
+        var btn = this;
+        var resultDiv = document.getElementById("imap-debug-result");
+        var host = document.getElementById("imap_host").value;
+        var user = document.getElementById("imap_username").value;
+        var pass = document.getElementById("imap_password").value;
+        var port = document.getElementById("imap_port").value;
+        var folder = document.getElementById("imap_folder").value;
+        
+        btn.disabled = true;
+        btn.innerHTML = "<i class=\'fa fa-spinner fa-spin\'></i> Loading...";
+        resultDiv.innerHTML = "";
+        
+        var url = "index.php?rex-api-call=mail_tools_imap_test&debug=1&host=" + encodeURIComponent(host) + "&user=" + encodeURIComponent(user) + "&password=" + encodeURIComponent(pass) + "&port=" + encodeURIComponent(port) + "&folder=" + encodeURIComponent(folder);
+        
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerHTML = "<i class=\'fa fa-bug\'></i> Debug: Show last 5 Emails";
+                
+                if (data.error) {
+                    resultDiv.innerHTML = "<div class=\'alert alert-danger\'>Error: " + data.error + "</div>";
+                } else {
+                    var html = "<div class=\'alert alert-info\'>Found " + data.count + " emails in folder \'" + folder + "\'. Showing last 5:</div>";
+                    if (data.emails && data.emails.length > 0) {
+                        html += "<table class=\'table table-striped table-hover\'><thead><tr><th>ID</th><th>Date</th><th>From</th><th>Subject</th><th>Flags</th></tr></thead><tbody>";
+                        data.emails.forEach(function(email) {
+                            html += "<tr>";
+                            html += "<td>" + email.id + "</td>";
+                            html += "<td>" + email.date + "</td>";
+                            html += "<td>" + email.from + "</td>";
+                            html += "<td>" + email.subject + "</td>";
+                            html += "<td><span class=\'label label-default\'>" + email.flags.seen + "</span> <span class=\'label label-default\'>" + email.flags.flagged + "</span></td>";
+                            html += "</tr>";
+                        });
+                        html += "</tbody></table>";
+                    } else {
+                        html += "<p>No emails found.</p>";
+                    }
+                    resultDiv.innerHTML = html;
+                }
+            })
+            .catch(error => {
+                btn.disabled = false;
+                btn.innerHTML = "<i class=\'fa fa-bug\'></i> Debug: Show last 5 Emails";
                 resultDiv.innerHTML = "<div class=\'alert alert-danger\'>Error: " + error + "</div>";
             });
     });
