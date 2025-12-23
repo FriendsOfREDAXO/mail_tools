@@ -242,6 +242,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 btn.innerHTML = "<i class=\'fa fa-refresh\'></i> Test & Load Folders";
                 resultDiv.innerHTML = "<div class=\'alert alert-danger\'>Error: " + error + "</div>";
             });
+    });
+
     document.getElementById("debug-imap-emails").addEventListener("click", function() {
         var btn = this;
         var resultDiv = document.getElementById("imap-debug-result");
