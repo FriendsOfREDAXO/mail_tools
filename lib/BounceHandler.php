@@ -38,7 +38,10 @@ class BounceHandler
         $mbox = @imap_open($mailbox, $user, $password);
 
         if (!$mbox) {
-            return ['error' => 'Could not connect to IMAP server: ' . imap_last_error()];
+            $lastError = imap_last_error();
+            $errors = imap_errors();
+            $errorMsg = $lastError ?: ($errors ? implode(', ', $errors) : 'Unknown connection error');
+            return ['error' => 'Could not connect to IMAP server: ' . $errorMsg];
         }
 
         // Suche nach neuen Nachrichten
@@ -52,7 +55,20 @@ class BounceHandler
         
         $emails = imap_search($mbox, $searchCriteria);
 
-        if (!$emails) {
+        if ($emails === false) {
+            $lastError = imap_last_error();
+            // Wenn kein Fehler vorliegt, bedeutet false einfach "keine Treffer"
+            if (!$lastError) {
+                imap_close($mbox);
+                return ['count' => 0, 'processed' => []];
+            }
+            
+            // Wenn ein Fehler vorliegt (z.B. Kriterium nicht unterstützt)
+            imap_close($mbox);
+            return ['error' => 'IMAP search failed: ' . $lastError];
+        }
+
+        if (empty($emails)) {
             imap_close($mbox);
             return ['count' => 0, 'processed' => []];
         }
