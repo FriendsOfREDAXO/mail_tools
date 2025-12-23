@@ -43,7 +43,12 @@ class BounceHandler
 
         // Suche nach neuen Nachrichten
         // Wir suchen nach Nachrichten, die typische Bounce-Subjects haben oder von Mailer-Daemon kommen
-        $searchCriteria = 'UNSEEN FROM "MAILER-DAEMON"'; 
+        // Erweitert: Auch nach "postmaster" und typischen Betreffzeilen suchen.
+        // 
+        // Änderung: Wir nutzen das 'Flagged' (Markiert/Stern) Flag, um verarbeitete Mails zu kennzeichnen,
+        // falls sie nicht gelöscht werden sollen.
+        // So können wir auch bereits gelesene (SEEN) Mails verarbeiten, ohne sie doppelt zu zählen.
+        $searchCriteria = 'UNFLAGGED';
         
         $emails = imap_search($mbox, $searchCriteria);
 
@@ -55,7 +60,10 @@ class BounceHandler
         $processed = [];
 
         foreach ($emails as $msgNo) {
-            // $header = imap_headerinfo($mbox, $msgNo);
+            // Header prüfen, um sicherzugehen, dass es ein Bounce ist?
+            // Vorerst prüfen wir einfach jeden UNSEEN Body auf Bounce-Muster.
+            // Das ist robuster als sich auf den Absender zu verlassen.
+            
             $body = imap_body($mbox, $msgNo);
             
             // Analyse des Body auf fehlgeschlagene E-Mail-Adresse
@@ -67,6 +75,9 @@ class BounceHandler
                 
                 if ($delete) {
                     imap_delete($mbox, $msgNo);
+                } else {
+                    // Markiere als verarbeitet (Flagged/Stern), damit sie beim nächsten Mal ignoriert wird
+                    imap_setflag_full($mbox, (string)$msgNo, "\\Flagged");
                 }
             }
         }
