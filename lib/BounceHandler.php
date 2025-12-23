@@ -182,6 +182,36 @@ class BounceHandler
         return ['count' => $numMsg, 'emails' => $emails];
     }
 
+    /**
+     * Analysiert eine spezifische E-Mail auf Bounce-Informationen.
+     * 
+     * @return array{error?: string, subject?: string, extracted_email?: ?string, body_preview?: string}
+     */
+    public static function analyzeBounce(string $host, string $user, string $password, int $port, string $folder, int $msgId): array
+    {
+        if (!function_exists('imap_open')) {
+            return ['error' => 'PHP IMAP extension is not available.'];
+        }
+
+        $mailbox = sprintf('{%s:%d/imap/ssl}%s', $host, $port, $folder);
+        $mbox = @imap_open($mailbox, $user, $password);
+
+        if (!$mbox) {
+            return ['error' => 'Connection failed: ' . imap_last_error()];
+        }
+
+        $body = imap_body($mbox, $msgId);
+        $extractedEmail = self::extractEmailFromBody($body);
+        
+        imap_close($mbox);
+
+        return [
+            'subject' => 'Analysis of Msg #' . $msgId,
+            'extracted_email' => $extractedEmail,
+            'body_preview' => substr($body, 0, 2000), // Erste 2000 Zeichen
+        ];
+    }
+
     private static function extractEmailFromBody(string $body): ?string
     {
         // Suche nach "Final-Recipient: rfc822; email@example.com"

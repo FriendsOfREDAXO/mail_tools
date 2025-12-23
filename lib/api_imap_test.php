@@ -9,6 +9,7 @@ class rex_api_mail_tools_imap_test extends rex_api_function
         $password = rex_request('password', 'string');
         $port = rex_request('port', 'int', 993);
         $debug = rex_request('debug', 'bool', false);
+        $analyze = rex_request('analyze', 'int', 0);
         $folder = rex_request('folder', 'string', 'INBOX');
 
         if (!$host || !$user || !$password) {
@@ -16,7 +17,9 @@ class rex_api_mail_tools_imap_test extends rex_api_function
             exit;
         }
 
-        if ($debug) {
+        if ($analyze > 0) {
+            $result = \FriendsOfRedaxo\MailTools\BounceHandler::analyzeBounce($host, $user, $password, $port, $folder, $analyze);
+        } elseif ($debug) {
             $result = \FriendsOfRedaxo\MailTools\BounceHandler::getRecentEmails($host, $user, $password, $port, $folder);
         } else {
             $result = \FriendsOfRedaxo\MailTools\BounceHandler::testConnection($host, $user, $password, $port);
