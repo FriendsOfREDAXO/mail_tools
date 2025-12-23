@@ -80,6 +80,47 @@ class BounceHandler
         return ['count' => count($processed), 'processed' => $processed];
     }
 
+    /**
+     * Testet die IMAP-Verbindung und gibt verfügbare Ordner zurück.
+     *
+     * @param string $host
+     * @param string $user
+     * @param string $password
+     * @param int $port
+     * @return array{success: bool, message?: string, folders?: array<string>}
+     */
+    public static function testConnection(string $host, string $user, string $password, int $port = 993): array
+    {
+        if (!function_exists('imap_open')) {
+            return ['success' => false, 'message' => 'PHP IMAP extension is not available.'];
+        }
+
+        $mailbox = sprintf('{%s:%d/imap/ssl}', $host, $port);
+        
+        // OP_HALFOPEN: Verbindung herstellen, aber keine Mailbox öffnen (für Ordnerliste)
+        $mbox = @imap_open($mailbox, $user, $password, OP_HALFOPEN);
+
+        if (!$mbox) {
+            return ['success' => false, 'message' => 'Connection failed: ' . imap_last_error()];
+        }
+
+        $folders = [];
+        $list = imap_list($mbox, $mailbox, '*');
+        
+        if (is_array($list)) {
+            foreach ($list as $val) {
+                // Entferne Server-Prefix aus Ordnernamen
+                $folders[] = str_replace($mailbox, '', $val);
+            }
+        } else {
+             return ['success' => true, 'message' => 'Connection successful, but could not list folders.', 'folders' => []];
+        }
+
+        imap_close($mbox);
+
+        return ['success' => true, 'folders' => $folders];
+    }
+
     private static function extractEmailFromBody(string $body): ?string
     {
         // Suche nach "Final-Recipient: rfc822; email@example.com"

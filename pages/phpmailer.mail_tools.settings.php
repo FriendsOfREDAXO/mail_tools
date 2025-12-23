@@ -156,8 +156,16 @@ $content = '
         
         <div class="form-group">
             <label for="imap_folder">IMAP Folder</label>
-            <input type="text" class="form-control" id="imap_folder" name="imap_folder" value="' . rex_escape($imapFolder) . '">
+            <div class="input-group">
+                <input type="text" class="form-control" id="imap_folder" name="imap_folder" value="' . rex_escape($imapFolder) . '">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="test-imap-connection">
+                        <i class="fa fa-refresh"></i> Test & Load Folders
+                    </button>
+                </span>
+            </div>
             <p class="help-block">Folder to check for bounces (e.g. INBOX or Bounces)</p>
+            <div id="imap-test-result" style="margin-top: 10px;"></div>
         </div>
         
         <div class="form-group">
@@ -186,7 +194,54 @@ $content = '
         </button>
     </div>
 
-</form>';
+</form>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("test-imap-connection").addEventListener("click", function() {
+        var btn = this;
+        var resultDiv = document.getElementById("imap-test-result");
+        var host = document.getElementById("imap_host").value;
+        var user = document.getElementById("imap_username").value;
+        var pass = document.getElementById("imap_password").value;
+        var port = document.getElementById("imap_port").value;
+        
+        btn.disabled = true;
+        btn.innerHTML = "<i class=\'fa fa-spinner fa-spin\'></i> Testing...";
+        resultDiv.innerHTML = "";
+        
+        var url = "index.php?rex-api-call=mail_tools_imap_test&host=" + encodeURIComponent(host) + "&user=" + encodeURIComponent(user) + "&password=" + encodeURIComponent(pass) + "&port=" + encodeURIComponent(port);
+        
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerHTML = "<i class=\'fa fa-refresh\'></i> Test & Load Folders";
+                
+                if (data.success) {
+                    var html = "<div class=\'alert alert-success\'>Connection successful!</div>";
+                    if (data.folders && data.folders.length > 0) {
+                        html += "<label>Select Folder:</label><select class=\'form-control\' onchange=\'document.getElementById(\"imap_folder\").value = this.value\'>";
+                        html += "<option value=\'\'>-- Select Folder --</option>";
+                        data.folders.forEach(function(folder) {
+                            html += "<option value=\'" + folder + "\'>" + folder + "</option>";
+                        });
+                        html += "</select>";
+                    }
+                    resultDiv.innerHTML = html;
+                } else {
+                    resultDiv.innerHTML = "<div class=\'alert alert-danger\'>Connection failed: " + data.message + "</div>";
+                }
+            })
+            .catch(error => {
+                btn.disabled = false;
+                btn.innerHTML = "<i class=\'fa fa-refresh\'></i> Test & Load Folders";
+                resultDiv.innerHTML = "<div class=\'alert alert-danger\'>Error: " + error + "</div>";
+            });
+    });
+});
+</script>
+';
 
 // Status-Info
 $statusContent = '<table class="table">
