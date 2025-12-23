@@ -15,6 +15,8 @@ if (rex_addon::get('phpmailer')->isAvailable()) {
 if (rex_addon::get('cronjob')->isAvailable()) {
     rex_cronjob_manager::registerType(\FriendsOfRedaxo\MailTools\Cronjob::class);
     rex_cronjob_manager::registerType(\FriendsOfRedaxo\MailTools\CronjobRetry::class);
+    rex_cronjob_manager::registerType(\FriendsOfRedaxo\MailTools\CronjobBounces::class);
+    rex_cronjob_manager::registerType(\FriendsOfRedaxo\MailTools\CronjobGdpr::class);
 }
 
 // YForm Validator registrieren, wenn YForm verfügbar

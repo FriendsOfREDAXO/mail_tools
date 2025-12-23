@@ -27,6 +27,9 @@ pages:
             settings:
                 title: 'translate:navigation_settings'
                 icon: rex-icon fa-cog
+            gdpr:
+                title: 'DSGVO Export'
+                icon: rex-icon fa-user-secret
             help:
                 title: 'translate:navigation_help'
                 icon: rex-icon fa-question-circle

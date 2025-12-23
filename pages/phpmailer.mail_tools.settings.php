@@ -18,6 +18,17 @@ if (rex_post('save_settings', 'bool', false)) {
     $addon->setConfig('check_typos', rex_post('check_typos', 'bool', false));
     $addon->setConfig('report_recipients', rex_post('report_recipients', 'string', ''));
     
+    // IMAP Settings
+    $addon->setConfig('imap_host', rex_post('imap_host', 'string', ''));
+    $addon->setConfig('imap_port', rex_post('imap_port', 'int', 993));
+    $addon->setConfig('imap_username', rex_post('imap_username', 'string', ''));
+    $addon->setConfig('imap_password', rex_post('imap_password', 'string', ''));
+    $addon->setConfig('imap_folder', rex_post('imap_folder', 'string', 'INBOX'));
+    $addon->setConfig('imap_delete_bounces', rex_post('imap_delete_bounces', 'bool', false));
+
+    // GDPR Settings
+    $addon->setConfig('gdpr_anonymize_days', rex_post('gdpr_anonymize_days', 'int', 30));
+    
     echo rex_view::success($addon->i18n('settings_saved'));
 }
 
@@ -29,6 +40,17 @@ $checkMx = $addon->getConfig('check_mx', false);
 $checkDisposable = $addon->getConfig('check_disposable', false);
 $checkTypos = $addon->getConfig('check_typos', false);
 $reportRecipients = $addon->getConfig('report_recipients', '');
+
+// IMAP
+$imapHost = $addon->getConfig('imap_host', '');
+$imapPort = $addon->getConfig('imap_port', 993);
+$imapUsername = $addon->getConfig('imap_username', '');
+$imapPassword = $addon->getConfig('imap_password', '');
+$imapFolder = $addon->getConfig('imap_folder', 'INBOX');
+$imapDeleteBounces = $addon->getConfig('imap_delete_bounces', false);
+
+// GDPR
+$gdprAnonymizeDays = $addon->getConfig('gdpr_anonymize_days', 30);
 
 $content = '
 <form action="' . rex_url::currentBackendPage() . '" method="post">
@@ -106,6 +128,55 @@ $content = '
             <input type="text" class="form-control" id="report_recipients" name="report_recipients" 
                    value="' . rex_escape($reportRecipients) . '" placeholder="admin@example.com, info@example.com">
             <p class="help-block">' . $addon->i18n('settings_report_recipients_notice') . '</p>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>IMAP Bounce Handling</legend>
+        
+        <div class="form-group">
+            <label for="imap_host">IMAP Host</label>
+            <input type="text" class="form-control" id="imap_host" name="imap_host" value="' . rex_escape($imapHost) . '">
+        </div>
+        
+        <div class="form-group">
+            <label for="imap_port">IMAP Port</label>
+            <input type="number" class="form-control" id="imap_port" name="imap_port" value="' . (int)$imapPort . '">
+        </div>
+        
+        <div class="form-group">
+            <label for="imap_username">IMAP Username</label>
+            <input type="text" class="form-control" id="imap_username" name="imap_username" value="' . rex_escape($imapUsername) . '">
+        </div>
+        
+        <div class="form-group">
+            <label for="imap_password">IMAP Password</label>
+            <input type="password" class="form-control" id="imap_password" name="imap_password" value="' . rex_escape($imapPassword) . '">
+        </div>
+        
+        <div class="form-group">
+            <label for="imap_folder">IMAP Folder</label>
+            <input type="text" class="form-control" id="imap_folder" name="imap_folder" value="' . rex_escape($imapFolder) . '">
+            <p class="help-block">Folder to check for bounces (e.g. INBOX or Bounces)</p>
+        </div>
+        
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="imap_delete_bounces" value="1"' . ($imapDeleteBounces ? ' checked' : '') . '>
+                    Delete processed bounce emails
+                </label>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>GDPR / DSGVO</legend>
+        
+        <div class="form-group">
+            <label for="gdpr_anonymize_days">Anonymize Logs after (days)</label>
+            <input type="number" class="form-control" id="gdpr_anonymize_days" name="gdpr_anonymize_days" value="' . (int)$gdprAnonymizeDays . '">
+            <p class="help-block">0 to disable auto-anonymization.</p>
         </div>
     </fieldset>
 

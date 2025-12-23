@@ -36,3 +36,15 @@ rex_sql_table::get(rex::getTable('mail_tools_retry'))
     ->ensureColumn(new rex_sql_column('last_success', 'tinyint(1)', false, '0'))
     ->ensureIndex(new rex_sql_index('log_hash', ['log_hash'], rex_sql_index::UNIQUE))
     ->ensure();
+
+// Tabelle für Bounces/Blocklist
+rex_sql_table::get(rex::getTable('mail_tools_bounces'))
+    ->ensurePrimaryIdColumn()
+    ->ensureColumn(new rex_sql_column('email', 'varchar(255)', false))
+    ->ensureColumn(new rex_sql_column('bounce_type', 'varchar(50)', false)) // hard, soft
+    ->ensureColumn(new rex_sql_column('bounce_message', 'text', true))
+    ->ensureColumn(new rex_sql_column('created_at', 'datetime', false))
+    ->ensureColumn(new rex_sql_column('updated_at', 'datetime', false))
+    ->ensureColumn(new rex_sql_column('count', 'int(11)', false, '1'))
+    ->ensureIndex(new rex_sql_index('email', ['email'], rex_sql_index::UNIQUE))
+    ->ensure();
