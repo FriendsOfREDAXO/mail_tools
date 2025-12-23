@@ -25,6 +25,7 @@ if (rex_post('save_settings', 'bool', false)) {
     $addon->setConfig('imap_password', rex_post('imap_password', 'string', ''));
     $addon->setConfig('imap_folder', rex_post('imap_folder', 'string', 'INBOX'));
     $addon->setConfig('imap_delete_bounces', rex_post('imap_delete_bounces', 'bool', false));
+    $addon->setConfig('imap_bounce_recipient', rex_post('imap_bounce_recipient', 'string', ''));
 
     // GDPR Settings
     $addon->setConfig('gdpr_anonymize_days', rex_post('gdpr_anonymize_days', 'int', 30));
@@ -48,6 +49,7 @@ $imapUsername = $addon->getConfig('imap_username', '');
 $imapPassword = $addon->getConfig('imap_password', '');
 $imapFolder = $addon->getConfig('imap_folder', 'INBOX');
 $imapDeleteBounces = $addon->getConfig('imap_delete_bounces', false);
+$imapBounceRecipient = $addon->getConfig('imap_bounce_recipient', '');
 
 // GDPR
 $gdprAnonymizeDays = $addon->getConfig('gdpr_anonymize_days', 30);
@@ -170,6 +172,12 @@ $content = '
             <p class="help-block">Folder to check for bounces (e.g. INBOX or Bounces)</p>
             <div id="imap-test-result" style="margin-top: 10px;"></div>
             <div id="imap-debug-result" style="margin-top: 10px;"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="imap_bounce_recipient">Filter by Recipient (optional)</label>
+            <input type="text" class="form-control" id="imap_bounce_recipient" name="imap_bounce_recipient" value="' . rex_escape($imapBounceRecipient) . '" placeholder="bounces@example.com">
+            <p class="help-block">Only process bounces sent to this address. Useful if multiple projects share one mailbox.</p>
         </div>
         
         <div class="form-group">

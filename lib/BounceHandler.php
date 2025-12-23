@@ -27,6 +27,7 @@ class BounceHandler
         $password = $addon->getConfig('imap_password');
         $folder = $addon->getConfig('imap_folder', 'INBOX');
         $delete = $addon->getConfig('imap_delete_bounces', false);
+        $filterRecipient = $addon->getConfig('imap_bounce_recipient', '');
 
         if (!$host || !$user || !$password) {
             return ['error' => 'IMAP settings are incomplete.'];
@@ -76,6 +77,20 @@ class BounceHandler
         $processed = [];
 
         foreach ($emails as $msgNo) {
+            // Optional: Filter by Recipient (To-Header)
+            if (!empty($filterRecipient)) {
+                $header = imap_headerinfo($mbox, $msgNo);
+                $toAddress = '';
+                if (isset($header->to[0])) {
+                    $toAddress = sprintf('%s@%s', $header->to[0]->mailbox, $header->to[0]->host);
+                }
+                
+                // Wenn der Empfänger nicht übereinstimmt, überspringen
+                if (stripos($toAddress, $filterRecipient) === false) {
+                    continue;
+                }
+            }
+
             // Header prüfen, um sicherzugehen, dass es ein Bounce ist?
             // Vorerst prüfen wir einfach jeden UNSEEN Body auf Bounce-Muster.
             // Das ist robuster als sich auf den Absender zu verlassen.

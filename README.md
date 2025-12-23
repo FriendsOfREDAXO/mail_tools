@@ -4,6 +4,8 @@ Ein REDAXO AddOn mit nützlichen E-Mail-Werkzeugen für Überwachung, Diagnose u
 
 Features: 
 - **Pre-Send Validator**: Domain-Prüfung vor dem Versand
+- **Bounce Management**: Automatische Verarbeitung von Rückläufern via IMAP
+- **DSGVO-Tools**: Log-Anonymisierung und Auskunfts-Export
 - SMTP-Diagnose mit verständlichen Hilfestellungen
 - SPF/DKIM/DMARC Reputation-Check
 - Blacklist-Prüfung (Spamhaus, SpamCop, Barracuda, SORBS)
@@ -17,6 +19,8 @@ Features:
 ## Features im Detail
 
 - **Pre-Send Validator**: Prüft Empfänger-Domains vor dem Versand und blockiert ungültige Adressen
+- **Bounce Management**: Überwacht ein IMAP-Postfach auf Rückläufer und führt eine Bounce-Liste
+- **DSGVO-Tools**: Automatische Anonymisierung von Logs und Export-Funktion für Auskunftsersuchen
 - **SMTP-Diagnose**: Umfassende Prüfung der E-Mail-Konfiguration mit verständlichen Hilfestellungen
 - **Absender-Reputation**: SPF/DKIM/DMARC-Prüfung und Blacklist-Check
 - **Testmail-Versand**: Schneller Test mit detaillierter Fehleranalyse
@@ -27,6 +31,36 @@ Features:
 - **Cronjob Retry**: Automatisches erneutes Senden bei temporären Fehlern
 - **YForm-Validator**: E-Mail-Domain-Prüfung für Formulare
 - **YForm Mailer**: E-Mail-Versand beim Speichern (Tablemanager-kompatibel)
+
+---
+
+## ↩️ Bounce Management (Neu in 2.0)
+
+Das AddOn kann ein IMAP-Postfach überwachen und automatisch Bounce-Mails (Rückläufer) erkennen.
+
+### Einrichtung
+1. Gehen Sie zu **Einstellungen**.
+2. Tragen Sie Ihre IMAP-Zugangsdaten ein (Host, Port, User, Passwort).
+3. Nutzen Sie den **"Test & Load Folders"** Button, um die Verbindung zu prüfen und den Ordner auszuwählen.
+4. Optional: Aktivieren Sie "Delete processed bounce emails", wenn die Mails nach Verarbeitung gelöscht werden sollen. Andernfalls werden sie als "markiert" (Flagged) gekennzeichnet.
+5. Optional: Tragen Sie eine Empfänger-Adresse ein, um nur Bounces für ein bestimmtes Projekt zu filtern.
+
+### Debugging
+Mit dem **"Debug: Show last 5 Emails"** Button können Sie prüfen, welche E-Mails im Postfach liegen und ob sie als Bounce erkannt werden ("Analyze"-Button).
+
+### Bounce-Liste
+Unter dem Menüpunkt **Bounces** finden Sie eine Liste aller erkannten Rückläufer mit Grund und Häufigkeit.
+
+---
+
+## 🔒 DSGVO / GDPR Tools (Neu in 2.0)
+
+### Log-Anonymisierung
+In den **Einstellungen** können Sie festlegen, nach wie vielen Tagen E-Mail-Adressen in den Logs automatisch anonymisiert werden sollen (z.B. `t***@example.com`).
+Ein Cronjob führt dies automatisch durch.
+
+### Auskunftsrecht (Export)
+Unter dem Menüpunkt **DSGVO Export** können Sie alle Log-Einträge zu einer spezifischen E-Mail-Adresse als CSV exportieren, um Auskunftsanfragen schnell beantworten zu können.
 
 ---
 
