@@ -138,6 +138,11 @@ class BounceHandler
             return $matches[1];
         }
 
+        // Suche nach "Original-Recipient: rfc822;email@example.com"
+        if (preg_match('/Original-Recipient:\s*rfc822;\s*([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/i', $body, $matches)) {
+            return $matches[1];
+        }
+
         return null;
     }
 
