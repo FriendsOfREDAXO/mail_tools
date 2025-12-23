@@ -6,6 +6,7 @@ title = E-Mail Tools
 navigation_stats = Statistik
 navigation_diagnostics = Diagnose
 navigation_log = Fehler-Log
+navigation_bounces = Bounces
 navigation_test = Test
 navigation_settings = Einstellungen
 navigation_help = Hilfe
@@ -42,6 +43,15 @@ settings_status_validation = Domain-Validierung
 settings_status_action = Aktion bei Fehler
 settings_active = Aktiv
 settings_inactive = Inaktiv
+
+# Bounces
+bounces_title = Bounce-Liste
+bounce_email = E-Mail
+bounce_type = Typ
+bounce_created = Erstellt am
+bounce_updated = Letzter Bounce
+bounce_count = Anzahl
+bounce_deleted = Eintrag gelöscht.
 
 # Pre-Send Validator Test
 test_presend_title = Pre-Send Validator testen
